@@ -1,0 +1,68 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'kites/css/styles.css' %}" type="text/css">
+    <link rel="shortcut icon" href="{% static 'kites/images/icon.ico' %}" type="image/x-icon">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <div class="head">
+        <div class="head__left">
+            <p>
+                <a href="{% url 'home' %}">Kites</a> | <a href="{% url 'experts' %}">Experts</a>
+            </p>
+        </div>
+        <div class="head__right">
+            {% if user.is_authenticated %}
+            <p>
+                <a href="{% url 'addkite' %}">Add kite</a> | {{ user }} | <a href="{% url 'logout' %}">Logout</a>
+            </p>
+            {% else %}
+            <p>
+                <a href="{% url 'register' %}">Register</a> | <a href="{% url 'login' %}">Login</a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="sidenav">
+        <h1>Brands</h1>
+        <ul>
+            <li>
+                <a class="sidenav__menu" href="{% url 'home' %}">ALL</a>
+            </li>
+            
+            {% for i in brands %}
+
+            {% if i.kite__count > 0 %}
+            <li>
+                <a class="sidenav__menu" href="{{ i.get_absolute_url }}">{{ i.name }}</a>
+            </li>
+            {% endif %}
+
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="main">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
+
+
+
+<!-- 
+    {% if brand_selected == 0 %}
+    <li>All</li>
+    {% else %}
+    {% endif %}
+{% if i.pk == brand_selected %}
+<li>{{ i.name }}</li>
+{% else %}
+{% endif %} 
+-->
+

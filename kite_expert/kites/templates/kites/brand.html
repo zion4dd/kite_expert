@@ -1,0 +1,15 @@
+{% extends 'kites/base.html' %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+{% for i in object_list %}
+<li>{{ i.name }} | {{ i }}</li>
+<!-- <p>Бренд: {{ i.brand }}</p> -->
+<!-- <p>Модель: {{ i.name }}</p> -->
+<!-- <p>Автор: {{ i.expert }}</p> -->
+<a href="{{ i.get_absolute_url }}" class="btn">Читать</a>
+<!-- <hr> -->
+{% endfor %}
+
+{% endblock %}

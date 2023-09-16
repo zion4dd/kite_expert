@@ -1,0 +1,17 @@
+{% extends 'kites/base.html' %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+{% for i in object_list %}
+
+
+<p><a href="{% url 'kite' i.name %}" class="btn">{{ i.name }}</a></p>
+
+{% if not forloop.last %}
+<hr>
+{% endif %}
+
+{% endfor %}
+
+{% endblock %}
