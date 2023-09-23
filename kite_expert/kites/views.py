@@ -1,10 +1,11 @@
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import models
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 # from django.utils.text import slugify
 
 from kites import models
@@ -25,7 +26,8 @@ class Index(utils.DataMixin, ListView):
         return models.Kite.objects\
             .values('name')\
                 .filter(is_published=True)\
-                    .distinct()
+                    .distinct()\
+                        .order_by('name')
     
 
 class Brand(utils.DataMixin, ListView):
@@ -36,15 +38,17 @@ class Brand(utils.DataMixin, ListView):
         context = super().get_context_data(**kwargs)
         c = context['object_list'][0]
         context_user = self.get_user_context(title=c['brand__name'], 
-                                            brand_selected=c['brand_id'],
-                                            )
+                                             brand_selected=c['brand_id'],
+                                             )
         return context | context_user
 
     def get_queryset(self):
         return models.Kite.objects\
             .values('name', 'brand', 'brand_id', 'brand__name')\
                 .distinct()\
-                    .filter(brand__name=self.kwargs['slug'], is_published=True)
+                    .filter(brand__name=self.kwargs['slug'], 
+                            is_published=True)\
+                        .order_by('name')
 
 
 class Kite(utils.DataMixin, ListView):
@@ -53,6 +57,9 @@ class Kite(utils.DataMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if not context['object_list']:
+            return self.get_user_context(title=self.kwargs['slug'])
+
         c = context['object_list'][0]
         context_user = self.get_user_context(title=c.name,
                                              brand_selected=c.brand_id,
@@ -60,9 +67,11 @@ class Kite(utils.DataMixin, ListView):
         return context | context_user
 
     def get_queryset(self):
-        return models.Kite.objects.filter(name=self.kwargs['slug'], 
-                                        is_published=True
-                                        )#.select_related('expert')
+        return models.Kite.objects\
+            .filter(name=self.kwargs['slug'], 
+                    is_published=True)\
+                .order_by('time_create')\
+                    # .select_related('expert')
 
 
 class AddKite(LoginRequiredMixin, utils.DataMixin, CreateView):
@@ -84,15 +93,22 @@ class KiteEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
     model = models.Kite
     form_class = forms.KiteForm
     template_name = 'kites/form_as_p.html'
-    slug_field = 'name'
-
+    slug_field = 'pk'
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Kite edit')
-        return context | c_def
+        context_user = self.get_user_context(title='Kite edit')
+        return context | context_user
     
     def get_success_url(self):
         return reverse_lazy('home')
+    
+
+@login_required
+def kite_del(request, id, slug):
+    print(id, slug)
+    models.Kite.objects.get(pk=id).delete()
+    return redirect('kite', slug=slug)
 
     
 class Expert(utils.DataMixin, ListView):
@@ -109,20 +125,25 @@ class Expert(utils.DataMixin, ListView):
         # print(self.kwargs.get('slug'))
         if self.kwargs.get('slug'):
             return models.Expert.objects\
-                .filter(name__username=self.kwargs['slug'])#.select_related('expert')
+                .filter(name__username=self.kwargs['slug'])\
+                    # .select_related('expert')
         return models.Expert.objects.all()
 
 
-class ExpertEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
+class ExpertEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateView):
     model = models.Expert
+    form_class = forms.ExpertForm
     template_name = 'kites/form_as_p.html'
     slug_field = 'name__username'
-    fields = ['about', 'photo']
+    # fields = ['about', 'photo']
+
+    def test_func(self):
+        return self.request.user.username == self.kwargs['slug']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Expert edit')
-        return context | c_def
+        context_user = self.get_user_context(title='Expert edit')
+        return context | context_user
     
     def get_success_url(self):
         return reverse_lazy('experts')
@@ -144,7 +165,7 @@ class UserRegister(utils.DataMixin, CreateView):
         # form.instance.is_active = False
         user = form.save()
         'создание эксперта на основе формы юзера'
-        models.Expert.objects.create(name=user) # slug=slugify(user) | slug=user.username
+        models.Expert.objects.create(name=user)
         login(self.request, user)
         return redirect('home')
     
@@ -155,11 +176,27 @@ class UserLogin(utils.DataMixin, LoginView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Login')
-        return context | c_def
+        context_user = self.get_user_context(title='Login')
+        return context | context_user
     
     def get_success_url(self):
         return reverse_lazy('home')
+
+
+class UserProfile(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, DetailView):
+    model = models.Expert
+    template_name = 'kites/profile.html'
+    slug_field = 'name__username'
+
+    def test_func(self):
+        return self.request.user.username == self.kwargs['slug']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context_user = self.get_user_context(title=self.kwargs['slug'])
+        context['not_published'] = models.Kite.objects.filter(is_published=False,
+                                                              expert=self.request.user.id)
+        return context | context_user
 
 
 def user_logout(request):

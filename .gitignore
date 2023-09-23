@@ -5,6 +5,7 @@
 *.db-journal
 dbstore/
 imgs/
+photos/
 #
 
 .idea/

@@ -9,7 +9,7 @@ from kites import models
 
 class UserRegisterForm(UserCreationForm):
     username = forms.CharField(max_length=100, label='Login', widget=forms.TextInput(attrs={'class': 'form-name'}))
-    password1 = forms.CharField(max_length=100, label='Pass', widget=forms.PasswordInput(attrs={'class': 'form-name'}))
+    password1 = forms.CharField(max_length=100, label='Pass1', widget=forms.PasswordInput(attrs={'class': 'form-name'}))
     password2 = forms.CharField(max_length=100, label='Pass2', widget=forms.PasswordInput(attrs={'class': 'form-name'}))
     # email = forms.EmailField(max_length=255, label='Email', widget=forms.EmailInput(attrs={'class': 'form-name'}))
     # first_name = forms.CharField(max_length=100, label='Nickname', widget=forms.TextInput(attrs={'class': 'form-name'}))
@@ -21,7 +21,7 @@ class UserRegisterForm(UserCreationForm):
 
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-name'}))
-    password = forms.CharField(label='Pass', widget=forms.PasswordInput(attrs={'class': 'form-name'}))
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-name'}))
 
 
 class KiteForm(forms.ModelForm):
@@ -52,6 +52,19 @@ class KiteForm(forms.ModelForm):
         return resize_image(img)
 
 
+class ExpertForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = models.Expert
+        fields = ['about', 'photo']
+
+    def clean_photo(self):
+        img = self.cleaned_data.get('photo')
+        return resize_image(img)
+
+
 def resize_image(image):
     from io import BytesIO
     from django.core.files.base import ContentFile
@@ -79,16 +92,3 @@ def resize_image(image):
     new_image = ContentFile(new_image.getvalue())
     return InMemoryUploadedFile(new_image, None, image.name, image.content_type, None, None)
         
-
-
-# class UserInfoForm(forms.ModelForm):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-
-#     class Meta:
-#         model = models.Expert
-#         fields = '__all__' # все поля кроме автозаполняемых
-        # fields = ['name', 'slug', 'content', 'photo', 'is_published', 'cat']
-        # widgets = {'name': forms.TextInput(attrs={'class': 'form-name'}),
-        #            'content': forms.Textarea(attrs={'cols': 60, 'rows': 10})}
-

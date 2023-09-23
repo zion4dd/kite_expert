@@ -10,6 +10,7 @@
     <link rel="shortcut icon" href="{% static 'kites/images/icon.ico' %}" type="image/x-icon">
     <title>{{ title }}</title>
 </head>
+
 <body>
     <div class="head">
         <div class="head__left">
@@ -20,7 +21,7 @@
         <div class="head__right">
             {% if user.is_authenticated %}
             <p>
-                <a href="{% url 'addkite' %}">Add kite</a> | {{ user }} | <a href="{% url 'logout' %}">Logout</a>
+                <a href="{% url 'addkite' %}">Add kite</a> | <a href="{% url 'profile' user %}">{{ user }}</a> | <a href="{% url 'logout' %}">Logout</a>
             </p>
             {% else %}
             <p>
@@ -29,30 +30,55 @@
             {% endif %}
         </div>
     </div>
-    <div class="sidenav">
-        <h1>Brands</h1>
-        <ul>
-            <li>
-                <a class="sidenav__menu" href="{% url 'home' %}">ALL</a>
-            </li>
-            
-            {% for i in brands %}
-
-            {% if i.kite__count > 0 %}
-            <li>
-                <a class="sidenav__menu" href="{{ i.get_absolute_url }}">{{ i.name }}</a>
-            </li>
-            {% endif %}
-
-            {% endfor %}
-        </ul>
-    </div>
     <div class="main">
-        {% block content %}{% endblock %}
+        <div class="sidenav">
+            <div class="sidenav__details">
+                <p>
+                    <details>
+                        <summary class="sidenav__summary">Brands</summary>
+                        <ul>
+                            <li>
+                                <a class="sidenav__menu" href="{% url 'home' %}">ALL</a>
+                            </li>
+                            
+                            {% for i in brands %}
+                
+                            {% if i.kite__count > 0 %}
+                            <li>
+                                <a class="sidenav__menu" href="{{ i.get_absolute_url }}">{{ i.name }}</a>
+                            </li>
+                            {% endif %}
+                
+                            {% endfor %}
+                        </ul>
+                    </details>
+                </p>
+            </div>
+            <div class="sidenav__not_details">
+                <h1>Brands</h1>
+                    <ul>
+                        <li>
+                            <a class="sidenav__menu" href="{% url 'home' %}">ALL</a>
+                        </li>
+                        
+                        {% for i in brands %}
+            
+                        {% if i.kite__count > 0 %}
+                        <li>
+                            <a class="sidenav__menu" href="{{ i.get_absolute_url }}">{{ i.name }}</a>
+                        </li>
+                        {% endif %}
+            
+                        {% endfor %}
+                    </ul>
+            </div>
+        </div>
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
     </div>
 </body>
 </html>
-
 
 
 <!-- 

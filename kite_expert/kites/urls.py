@@ -11,9 +11,12 @@ urlpatterns = [
     path('brand/<slug:slug>/', views.Brand.as_view(), name='brand'),
     path('kite/add/', views.AddKite.as_view(), name='addkite'),
     path('kite/edit/<slug:slug>/', views.KiteEdit.as_view(), name='kiteedit'),
+    path('kite/del/<slug:slug>/<int:id>', views.kite_del, name='kitedel'),
     path('kite/<slug:slug>/', views.Kite.as_view(), name='kite'),
 
     path('expert/', views.Expert.as_view(), name='experts'),
     path('expert/<slug:slug>/', views.Expert.as_view(), name='expert'),
-    path('expert/edit/<slug:slug>/', views.ExpertEdit.as_view(), name='expertedit'),
+    
+    path('profile/edit/<slug:slug>/', views.ExpertEdit.as_view(), name='expertedit'),
+    path('profile/<slug:slug>/', views.UserProfile.as_view(), name='profile'),
 ]

@@ -16,7 +16,6 @@ class Expert(models.Model):
         return reverse('expert', kwargs={'slug': self.name})
 
 
-
 class Kite(models.Model):
     name = models.CharField(max_length=100)
     text = models.TextField(blank=True)
@@ -32,9 +31,15 @@ class Kite(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+    def get_kiteedit_url(self): # для отображения записей БД
+        return reverse('kiteedit', kwargs={'slug': self.pk})
+    
+    def get_kitedel_url(self):
+        return reverse('kitedel', kwargs={'slug': self.name, 'id': self.pk})
 
-    def get_absolute_url(self): # для отображения записей БД
-        return reverse('kite', kwargs={'slug': self.name})
+    def get_expert_url(self):
+        return reverse('expert', kwargs={'slug': self.expert})
     
     # def save(self, *args, **kwargs):
     #     if self.photo1:

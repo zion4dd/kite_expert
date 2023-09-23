@@ -1,76 +1,28 @@
 body {
-    /* width: 70%; */
     margin: 0;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     background-color: #00c3a6;
     background-color: #f5f5dc;
+    /* background-image: url(rs_white.webp);
+    background-attachment: fixed; */
 }
 
-.main {
-    margin-left: 180px;
-    padding: 0px 50px;
-    /* width: 100%; */
-    height: 100%;
-    padding-top: 50px;
-    /* background-color: burlywood; */
+ul {
+    padding-inline-start: 0px;
+    list-style-type: none;
+    font-weight: bold;
 }
 
-.sidenav {
-    height: 100%;
-    width: 160px;
-    position: fixed;
-    z-index: 1;
-    top: 30;
-    left: 0;
-    background-color: #c3001e;
-    background-color: #00c3a6;
-    overflow-x: hidden;
-    padding-top: 50px;
-    padding-left: 20px;
-}
-
-.sidenav__menu {
-    text-decoration: none; /* Убираем подчёркивание */
-    font-size: 18px;
-    line-height: 28px;
-    color: #002b24;
-    text-align: right;
-
-}
-
-.btn {
-    display: inline-block; /* Строчно-блочный элемент */
-    /* background: #8C959D; Серый цвет фона */
-    background: #770012;
-    background: #c3001e;
-    background: #00c3a6;
-    color: #fff; /* Белый цвет текста */
-    color: #000;
-    padding: .5rem 1.5rem; /* Поля вокруг текста */
-    text-decoration: none; /* Убираем подчёркивание */
-    border-radius: 3px; /* Скругляем уголки */
-    width: 200px;
-}
-
-.form-label {
-    /* display: block; */
+label {
+    display: block;
     float: left;
-    width: 150px;
-}
-
-.form-error {
-    color: brown;
-}
-
-.form-name {
-    width: 300px;
+    width: 100px;
 }
 
 .head {
     position: sticky;
     display: flex;
     top: 0;
-    left: 0;
     background: #007765;
     padding: 0px 20px;
 }
@@ -82,7 +34,8 @@ body {
     margin: auto;
     font-size: 24px;
     line-height: 28px;
-    color: white;
+    color: #f5f5dc;
+    color: #000;
     text-align: left;
 }
 
@@ -93,18 +46,98 @@ body {
     margin: auto;
     font-size: 24px;
     line-height: 28px;
-    color: #f5f5dc;
     text-align: right;
+    color: #f5f5dc;
+    color: #000;
 }
 
 .head a {
-    color: #f5f5dc;
     text-decoration: none;
+    color: #f5f5dc;
+    color: #000;
 }
 
-.head__logo {
+/* .head__logo {
     width: 184px;
     height: 45px;
+} */
+
+.main {
+    display: flex;
+}
+
+.content {
+    margin-left: 220px;
+    padding: 0px 100px;
+    width: 100%;
+    height: 100%;
+    padding-top: 50px;
+    /* background-color: burlywood; */
+}
+
+.sidenav {
+    height: 100%;
+    min-width: 150px;
+    width: -moz-fit-content;
+    width: fit-content;
+    position: fixed;
+    left: 0;
+    background-color: #c3001e;
+    background-color: #00c3a6;
+    overflow-x: hidden;
+    padding: 50px 30px;
+    color: #f5f5dc;
+    color: #000;
+}
+
+.sidenav__menu {
+    font-size: 18px;
+    line-height: 28px;
+    text-decoration: none; /* Убираем подчёркивание */
+    color: #f5f5dc;
+    color: #000;
+}
+
+.sidenav__summary {
+    font-size: 24px;
+}
+
+.sidenav__details {
+    display: none;
+}
+
+.sidenav__not_details {
+    display: unset;
+}
+
+.btn {
+    display: inline-block; /* Строчно-блочный элемент */
+    background: #8C959D;
+    background: #770012;
+    background: #00c3a6;
+    background: #c3001e;
+    color: #f5f5dc;
+    color: #000;
+    padding: .5rem 1.5rem; /* Поля вокруг текста */
+    text-decoration: none; /* Убираем подчёркивание */
+    border-radius: 3px; /* Скругляем уголки */
+    width: 200px;
+    font-weight: bold;
+}
+
+.form-label {
+    display: block;
+    float: left;
+    width: 150px;
+}
+
+.form-error {
+    color: brown;
+}
+
+.form-name {
+    width: 150px;
+    margin-left: 20px;
 }
 
 .img-block {
@@ -118,4 +151,99 @@ body {
 .img-kite {
     max-height: 100%;
     border-radius: 20%;
+}
+
+
+
+
+@media screen and (max-width: 576px) {
+    h1 {
+        font-size: 18px;
+        line-height: 18px;
+    }
+
+    .head__left {
+        font-size: 18px;
+        line-height: 18px;
+    }
+
+    .head__right {
+        font-size: 18px;
+        line-height: 18px;
+    }
+
+    /* .main {
+        flex-direction: column;
+        align-items: flex-start;
+    } */
+    
+    .sidenav {
+        position: fixed;
+        width: 100%;
+        height: unset;
+        padding: 0px 20px;
+    }
+    
+    .sidenav__menu {
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .sidenav__summary {
+        font-size: 18px;
+    }
+
+    .sidenav__details {
+        display: unset;
+    }
+
+    .sidenav__not_details {
+        display: none;
+    }
+    
+    .content {
+        margin: 0px 20px;
+        padding: 70px 0px;
+    }
+
+    .btn {
+        width: -webkit-fill-available;
+    }
+
+    .img-block {
+        width: 100px;
+        height: 100px;
+    }
+
+}
+
+@media screen and (max-width: 450px) {
+    label {
+        width: 70px;
+    }
+
+    #id_text {
+        width: 90%;
+    }
+
+    .head {
+        flex-direction: column-reverse;
+    }
+
+    .head__left {
+        width: 100%;
+    }
+    
+    .head__right {
+        text-align: left;
+        width: 100%;
+    }
+
+    .head__left > p {
+        margin: 5px;
+
+    }
+    .head__right > p {
+        margin: 5px;
+    }
 }

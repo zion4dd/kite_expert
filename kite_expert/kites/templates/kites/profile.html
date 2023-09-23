@@ -2,13 +2,26 @@
 
 {% block content %}
 <h1>{{ title }}</h1>
+<p>
+    {% if object.photo %}
+    <div class="img-block">
+        <a href="{{ object.photo.url }}" title="open">
+            <img class="img-kite" src="{{ object.photo.url }}/" alt="">
+        </a>
+    </div>
+    {% endif %}
+</p>
+<p>{{ object.about|linebreaks }}</p>
+<p><a href="{% url 'expertedit' object.name %}">Edit profile</a></p>
+<hr>
 
+<h3>Not published:</h3>
 
-{% for i in object_list %}
-<!-- <p><a class="btn" href="{% url 'expert' i.expert %}">{{ i.expert }}</a></p> -->
-<p><a class="btn" href="{{ i.get_expert_url }}">{{ i.expert }}</a></p>
-<p>{{ i.text|linebreaks }}</p>
-
+{% for i in not_published %}
+<h3>{{ i.brand }} | {{ i.name }}</h3>
+<p>Created: {{ i.time_create|date:'Y-m-d H:i' }}</p>
+<p>Updated: {{ i.time_update|date:'Y-m-d H:i' }}</p>
+<p>{{ i.text }}</p>
 <p>
     {% if i.photo1 %}
     <div class="img-block">
@@ -39,14 +52,9 @@
     </div>
     {% endif %}
 </p>
-
-{% if i.expert == user %}
-<!-- <p><a href="{% url 'kiteedit' i.pk %}">Edit</a></p> -->
 <p><a href="{{ i.get_kiteedit_url }}">Edit</a></p>
 <p><a href="{{ i.get_kitedel_url }}">Delete</a></p>
-{% endif %}
 
-<p>last update: {{ i.time_update|date:'Y-m-d' }}</p>
 {% if not forloop.last %}
 <hr>
 {% endif %}
