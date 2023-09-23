@@ -17,7 +17,7 @@
     {% endif %}
 </p>
 
-<p>{{ i.about|linebreaks }}</p>
+<p>{{ i.about|linebreaks|truncatechars_html:500 }}</p>
 
 <!-- {% if i.name == user %}
 <p><a href="{% url 'expertedit' i.name %}">Edit</a></p>

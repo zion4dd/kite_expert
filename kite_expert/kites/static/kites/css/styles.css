@@ -217,12 +217,14 @@ label {
 
 }
 
+
+
 @media screen and (max-width: 450px) {
     label {
         width: 70px;
     }
 
-    #id_text {
+    textarea {
         width: 90%;
     }
 
@@ -235,7 +237,7 @@ label {
     }
     
     .head__right {
-        text-align: left;
+        /* text-align: left; */
         width: 100%;
     }
 

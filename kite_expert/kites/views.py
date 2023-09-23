@@ -46,7 +46,7 @@ class Brand(utils.DataMixin, ListView):
         return models.Kite.objects\
             .values('name', 'brand', 'brand_id', 'brand__name')\
                 .distinct()\
-                    .filter(brand__name=self.kwargs['slug'], 
+                    .filter(brand__slug=self.kwargs['slug'], 
                             is_published=True)\
                         .order_by('name')
 
@@ -194,8 +194,8 @@ class UserProfile(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, Deta
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context_user = self.get_user_context(title=self.kwargs['slug'])
-        context['not_published'] = models.Kite.objects.filter(is_published=False,
-                                                              expert=self.request.user.id)
+        context['expert_kites'] = models.Kite.objects.filter(#is_published=False,
+                                                              expert=self.request.user.id).order_by('is_published', 'brand', 'name')
         return context | context_user
 
 

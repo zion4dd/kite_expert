@@ -15,17 +15,21 @@
     <div class="head">
         <div class="head__left">
             <p>
-                <a href="{% url 'home' %}">Kites</a> | <a href="{% url 'experts' %}">Experts</a>
+                <a href="{% url 'home' %}">Kites</a> | 
+                <a href="{% url 'experts' %}">Experts</a>
             </p>
         </div>
         <div class="head__right">
             {% if user.is_authenticated %}
             <p>
-                <a href="{% url 'addkite' %}">Add kite</a> | <a href="{% url 'profile' user %}">{{ user }}</a> | <a href="{% url 'logout' %}">Logout</a>
+                <a href="{% url 'addkite' %}">Add kite</a> | 
+                <a href="{% url 'profile' user %}">{{ user }}</a> | 
+                <a href="{% url 'logout' %}">Logout</a>
             </p>
             {% else %}
             <p>
-                <a href="{% url 'register' %}">Register</a> | <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a> | 
+                <a href="{% url 'login' %}">Login</a>
             </p>
             {% endif %}
         </div>

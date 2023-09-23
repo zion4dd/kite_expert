@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 
 class Expert(models.Model):
@@ -15,7 +16,7 @@ class Expert(models.Model):
     def get_absolute_url(self): # для отображения записей БД
         return reverse('expert', kwargs={'slug': self.name})
 
-
+#TODO slug
 class Kite(models.Model):
     name = models.CharField(max_length=100)
     text = models.TextField(blank=True)
@@ -41,17 +42,18 @@ class Kite(models.Model):
     def get_expert_url(self):
         return reverse('expert', kwargs={'slug': self.expert})
     
-    # def save(self, *args, **kwargs):
-    #     if self.photo1:
-    #         self.photo1 = resize_image(self.photo1)
-    #     super(Kite, self).save(*args, **kwargs)
     
-
 class Brand(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
 
     def __str__(self) -> str:
         return self.name
     
     def get_absolute_url(self): # для отображения записей БД
-        return reverse('brand', kwargs={'slug': self.name})
+        return reverse('brand', kwargs={'slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)

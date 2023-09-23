@@ -43,10 +43,11 @@
 {% if i.expert == user %}
 <!-- <p><a href="{% url 'kiteedit' i.pk %}">Edit</a></p> -->
 <p><a href="{{ i.get_kiteedit_url }}">Edit</a></p>
-<p><a href="{{ i.get_kitedel_url }}">Delete</a></p>
+<p><a href="{{ i.get_kitedel_url }}" onClick="return window.confirm('Confirm?');">Delete</a></p>
 {% endif %}
 
 <p>last update: {{ i.time_update|date:'Y-m-d' }}</p>
+
 {% if not forloop.last %}
 <hr>
 {% endif %}
