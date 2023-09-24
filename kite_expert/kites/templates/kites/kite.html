@@ -5,7 +5,6 @@
 
 
 {% for i in object_list %}
-<!-- <p><a class="btn" href="{% url 'expert' i.expert %}">{{ i.expert }}</a></p> -->
 <p><a class="btn" href="{{ i.get_expert_url }}">{{ i.expert }}</a></p>
 <p>{{ i.text|linebreaks }}</p>
 

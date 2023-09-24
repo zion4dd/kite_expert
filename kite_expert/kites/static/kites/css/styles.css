@@ -1,8 +1,24 @@
+#color11 {
+    color: #066;
+    color: #9cc;
+    color: #ffc;
+    color: #f96;
+    color: #f63;
+}
+
+#color22 {
+    color: #007765;
+    color: #00c3a6;
+    color: #f5f5dc;
+    color: #c3001e;
+    color: brown;
+}
+
 body {
     margin: 0;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    background-color: #00c3a6;
-    background-color: #f5f5dc;
+    background-color: #ffc;
+    color: #000;
     /* background-image: url(rs_white.webp);
     background-attachment: fixed; */
 }
@@ -21,40 +37,38 @@ label {
 
 .head {
     position: sticky;
-    display: flex;
     top: 0;
-    background: #007765;
+    display: flex;
+    flex-wrap: wrap;
+    background: #066;
     padding: 0px 20px;
-}
-
-.head__left {
-    /* background: blue; */
-    width: 50%;
-    float: left;
-    margin: auto;
     font-size: 24px;
-    line-height: 28px;
-    color: #f5f5dc;
-    color: #000;
-    text-align: left;
-}
-
-.head__right {
-    /* background: red; */
-    width: 50%;
-    float: right;
-    margin: auto;
-    font-size: 24px;
-    line-height: 28px;
-    text-align: right;
-    color: #f5f5dc;
-    color: #000;
+    line-height: 5px;
+    color: #9cc;
 }
 
 .head a {
     text-decoration: none;
-    color: #f5f5dc;
-    color: #000;
+    color: #9cc;
+}
+
+.head__user {
+    width: 100%;
+    text-align: right;
+}
+
+.head__left {
+    width: 70%;
+    float: left;
+    margin: auto;
+    text-align: left;
+}
+
+.head__right {
+    width: 30%;
+    float: right;
+    margin: auto;
+    text-align: right;
 }
 
 /* .head__logo {
@@ -66,40 +80,24 @@ label {
     display: flex;
 }
 
-.content {
-    margin-left: 220px;
-    padding: 0px 100px;
-    width: 100%;
-    height: 100%;
-    padding-top: 50px;
-    /* background-color: burlywood; */
-}
-
 .sidenav {
     height: 100%;
-    min-width: 150px;
+    min-width: 130px;
     width: -moz-fit-content;
     width: fit-content;
     position: fixed;
     left: 0;
-    background-color: #c3001e;
-    background-color: #00c3a6;
+    background-color: #9cc;
     overflow-x: hidden;
     padding: 50px 30px;
-    color: #f5f5dc;
-    color: #000;
+    /* color: #000; */
 }
 
-.sidenav__menu {
+.sidenav a {
     font-size: 18px;
     line-height: 28px;
-    text-decoration: none; /* Убираем подчёркивание */
-    color: #f5f5dc;
+    text-decoration: none;
     color: #000;
-}
-
-.sidenav__summary {
-    font-size: 24px;
 }
 
 .sidenav__details {
@@ -110,29 +108,23 @@ label {
     display: unset;
 }
 
+.content {
+    margin-left: 200px;
+    padding: 0px 100px;
+    width: 100%;
+    height: 100%;
+    padding-top: 50px;
+}
+
 .btn {
     display: inline-block; /* Строчно-блочный элемент */
-    background: #8C959D;
-    background: #770012;
-    background: #00c3a6;
-    background: #c3001e;
-    color: #f5f5dc;
-    color: #000;
-    padding: .5rem 1.5rem; /* Поля вокруг текста */
+    min-width: 200px;
+    border-radius: 3px;
+    background: #f96;
+    padding: .5rem 1.5rem;
     text-decoration: none; /* Убираем подчёркивание */
-    border-radius: 3px; /* Скругляем уголки */
-    width: 200px;
     font-weight: bold;
-}
-
-.form-label {
-    display: block;
-    float: left;
-    width: 150px;
-}
-
-.form-error {
-    color: brown;
+    color: #000;
 }
 
 .form-name {
@@ -140,11 +132,21 @@ label {
     margin-left: 20px;
 }
 
+/* .form-label {
+    display: block;
+    float: left;
+    width: 150px;
+} */
+
+/* .form-error {
+    color: brown;
+} */
+
 .img-block {
+    display: inline-block;
     width: 200px;
     height: 200px;
     background-size: cover;
-    display: inline-block;
     overflow:hidden;
 }
 
@@ -154,22 +156,9 @@ label {
 }
 
 
-
-
 @media screen and (max-width: 576px) {
-    h1 {
+    .head {
         font-size: 18px;
-        line-height: 18px;
-    }
-
-    .head__left {
-        font-size: 18px;
-        line-height: 18px;
-    }
-
-    .head__right {
-        font-size: 18px;
-        line-height: 18px;
     }
 
     /* .main {
@@ -182,15 +171,8 @@ label {
         width: 100%;
         height: unset;
         padding: 0px 20px;
-    }
-    
-    .sidenav__menu {
-        font-size: 16px;
-        line-height: 24px;
-    }
-
-    .sidenav__summary {
         font-size: 18px;
+        line-height: 5px;
     }
 
     .sidenav__details {
@@ -218,7 +200,6 @@ label {
 }
 
 
-
 @media screen and (max-width: 450px) {
     label {
         width: 70px;
@@ -228,24 +209,11 @@ label {
         width: 90%;
     }
 
-    .head {
-        flex-direction: column-reverse;
-    }
-
-    .head__left {
-        width: 100%;
-    }
-    
-    .head__right {
-        /* text-align: left; */
-        width: 100%;
-    }
-
-    .head__left > p {
+    /* .head__left > p {
         margin: 5px;
 
     }
     .head__right > p {
         margin: 5px;
-    }
+    } */
 }

@@ -23,8 +23,7 @@
 {% endif %}
 
 <h3>{{ i.brand }} | {{ i.name }}</h3>
-<p>Created: {{ i.time_create|date:'Y-m-d H:i' }}</p>
-<p>Updated: {{ i.time_update|date:'Y-m-d H:i' }}</p>
+<p>{{ i.time_create|date:'Y-m-d' }} | {{ i.time_update|date:'Y-m-d' }}</p>
 <p>{{ i.text }}</p>
 
 <details>
@@ -60,8 +59,11 @@
         {% endif %}
     </p>
 </details>
-<p><a href="{{ i.get_kiteedit_url }}">Edit</a></p>
-<p><a href="{{ i.get_kitedel_url }}" onClick="return window.confirm('Confirm?');">Delete</a></p>
+
+<p>
+    <a href="{{ i.get_kiteedit_url }}">Edit</a> | 
+    <a href="{{ i.get_kitedel_url }}" onClick="return window.confirm('Confirm?');">Delete</a>
+</p>
 
 {% if not forloop.last %}
 <hr>

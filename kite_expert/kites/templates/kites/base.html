@@ -22,14 +22,20 @@
         <div class="head__right">
             {% if user.is_authenticated %}
             <p>
-                <a href="{% url 'addkite' %}">Add kite</a> | 
-                <a href="{% url 'profile' user %}">{{ user }}</a> | 
-                <a href="{% url 'logout' %}">Logout</a>
-            </p>
-            {% else %}
+                    <a href="{% url 'logout' %}">Logout</a>
+                </p>
+                {% else %}
+                <p>
+                    <!-- <a href="{% url 'register' %}">Register</a> |  -->
+                    <a href="{% url 'login' %}">Login</a>
+                </p>
+                {% endif %}
+        </div>
+        <div class="head__user">
+            {% if user.is_authenticated %}
             <p>
-                <a href="{% url 'register' %}">Register</a> | 
-                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'addkite' %}">Add kite</a> | 
+                <a href="{% url 'profile' user %}">{{ user }}</a>
             </p>
             {% endif %}
         </div>
@@ -39,20 +45,17 @@
             <div class="sidenav__details">
                 <p>
                     <details>
-                        <summary class="sidenav__summary">Brands</summary>
+                        <summary>Brands</summary>
                         <ul>
                             <li>
-                                <a class="sidenav__menu" href="{% url 'home' %}">ALL</a>
+                                <a href="{% url 'home' %}">ALL</a>
                             </li>
-                            
                             {% for i in brands %}
-                
                             {% if i.kite__count > 0 %}
                             <li>
-                                <a class="sidenav__menu" href="{{ i.get_absolute_url }}">{{ i.name }}</a>
+                                <a href="{{ i.get_absolute_url }}">{{ i.name }}</a>
                             </li>
                             {% endif %}
-                
                             {% endfor %}
                         </ul>
                     </details>
@@ -62,14 +65,14 @@
                 <h1>Brands</h1>
                     <ul>
                         <li>
-                            <a class="sidenav__menu" href="{% url 'home' %}">ALL</a>
+                            <a href="{% url 'home' %}">ALL</a>
                         </li>
                         
                         {% for i in brands %}
             
                         {% if i.kite__count > 0 %}
                         <li>
-                            <a class="sidenav__menu" href="{{ i.get_absolute_url }}">{{ i.name }}</a>
+                            <a href="{{ i.get_absolute_url }}">{{ i.name }}</a>
                         </li>
                         {% endif %}
             
