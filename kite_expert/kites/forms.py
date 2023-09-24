@@ -2,8 +2,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.files.images import get_image_dimensions
 from django.db.models.fields.files import ImageFieldFile
-
+from django.utils.text import slugify
 from django import forms
+
 from kites import models
 
 
@@ -33,7 +34,10 @@ class KiteForm(forms.ModelForm):
         fields = ['brand', 'name', 'text', 'photo1', 'photo2', 'photo3', 'photo4', 'is_published']
 
     def clean_name(self):
-        return self.cleaned_data['name'].upper().replace(' ', '_')
+        return self.cleaned_data['name'].upper()
+    
+    def clean_slug(self):
+        return slugify(self.cleaned_data['name'])
     
     def clean_photo1(self):
         img = self.cleaned_data.get('photo1')
@@ -50,6 +54,14 @@ class KiteForm(forms.ModelForm):
     def clean_photo4(self):
         img = self.cleaned_data.get('photo4')
         return resize_image(img)
+
+
+class BrandForm(forms.ModelForm):
+    def clean_name(self):
+        return self.cleaned_data["name"].upper()
+    
+    def clean_slug(self):
+        return slugify(self.cleaned_data["name"])
 
 
 class ExpertForm(forms.ModelForm):

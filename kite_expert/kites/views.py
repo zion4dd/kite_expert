@@ -6,7 +6,6 @@ from django.db import models
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse, reverse_lazy
-# from django.utils.text import slugify
 
 from kites import models
 from kites import utils
@@ -23,7 +22,7 @@ class Index(utils.DataMixin, ListView):
 
     def get_queryset(self):
         return models.Kite.objects\
-                    .values('name')\
+                    .values('name', 'slug')\
                     .filter(is_published=True)\
                     .distinct()
                         
@@ -40,7 +39,7 @@ class Brand(utils.DataMixin, ListView):
     def get_queryset(self):
         slug = self.kwargs['slug']
         kite_set = models.Kite.objects\
-                    .values('name', 'brand__name')\
+                    .values('name', 'brand__name', 'slug')\
                     .filter(brand__slug=slug, is_published=True)\
                     .distinct()
         self.BRAND = kite_set[0]['brand__name'] if kite_set else 'None'
@@ -66,7 +65,7 @@ class Kite(utils.DataMixin, ListView):
 
     def get_queryset(self):
         return models.Kite.objects\
-                    .filter(name=self.kwargs['slug'], 
+                    .filter(slug=self.kwargs['slug'], 
                             is_published=True)\
                     .order_by('time_create')\
                     # .select_related('expert')
@@ -91,10 +90,9 @@ class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateV
     model = models.Kite
     form_class = forms.KiteForm
     template_name = 'kites/form_as_p.html'
-    slug_field = 'pk'
 
     def test_func(self):
-        k = models.Kite.objects.get(pk=self.kwargs['slug'])
+        k = models.Kite.objects.get(pk=self.kwargs['pk'])
         return self.request.user.id == k.expert_id
     
     def get_context_data(self, **kwargs):

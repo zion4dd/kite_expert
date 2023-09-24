@@ -16,10 +16,10 @@ class Expert(models.Model):
     def get_absolute_url(self): # для отображения записей БД
         return reverse('expert', kwargs={'slug': self.name})
 
-#TODO slug
+
 class Kite(models.Model):
-    name = models.CharField(max_length=100)
-    
+    name = models.CharField(max_length=100, db_index=True)
+    slug = models.SlugField(max_length=255, db_index=True, verbose_name='URL')
     text = models.TextField(blank=True)
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
@@ -35,7 +35,7 @@ class Kite(models.Model):
         return self.name
     
     def get_kiteedit_url(self): # для отображения записей БД
-        return reverse('kiteedit', kwargs={'slug': self.pk})
+        return reverse('kiteedit', kwargs={'pk': self.pk})
     
     def get_kitedel_url(self):
         return reverse('kitedel', kwargs={'id': self.pk})
@@ -43,6 +43,11 @@ class Kite(models.Model):
     def get_expert_url(self):
         return reverse('expert', kwargs={'slug': self.expert})
     
+    def save(self, *args, **kwargs):
+        # if not self.slug:
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
     class Meta:
         ordering = ['name',]
     

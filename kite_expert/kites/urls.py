@@ -13,7 +13,7 @@ urlpatterns = [
     path('brand/<slug:slug>/', views.Brand.as_view(), name='brand'),
 
     path('kite/add/', views.AddKite.as_view(), name='addkite'),
-    path('kite/edit/<slug:slug>/', views.KiteEdit.as_view(), name='kiteedit'),
+    path('kite/edit/<int:pk>/', views.KiteEdit.as_view(), name='kiteedit'),
     path('kite/del/<int:id>', views.kite_del, name='kitedel'),
     path('kite/<slug:slug>/', views.Kite.as_view(), name='kite'),
 
