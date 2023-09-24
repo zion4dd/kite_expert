@@ -14,7 +14,6 @@ from kites import forms
 
 
 class Index(utils.DataMixin, ListView):
-    model = models.Kite
     template_name = 'kites/index.html'
 
     def get_context_data(self, **kwargs):
@@ -24,35 +23,35 @@ class Index(utils.DataMixin, ListView):
 
     def get_queryset(self):
         return models.Kite.objects\
-            .values('name')\
-                .filter(is_published=True)\
-                    .distinct()\
-                        .order_by('name')
-    
+                    .values('name')\
+                    .filter(is_published=True)\
+                    .distinct()
+                        
 
 class Brand(utils.DataMixin, ListView):
-    model = models.Kite
+    BRAND = None
     template_name = 'kites/index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        c = context['object_list'][0]
-        context_user = self.get_user_context(title=c['brand__name'], 
-                                             brand_selected=c['brand_id'],
-                                             )
+        context_user = self.get_user_context(title=self.BRAND)
         return context | context_user
 
     def get_queryset(self):
-        return models.Kite.objects\
-            .values('name', 'brand', 'brand_id', 'brand__name')\
-                .distinct()\
-                    .filter(brand__slug=self.kwargs['slug'], 
-                            is_published=True)\
-                        .order_by('name')
+        slug = self.kwargs['slug']
+        kite_set = models.Kite.objects\
+                    .values('name', 'brand__name')\
+                    .filter(brand__slug=slug, is_published=True)\
+                    .distinct()
+        self.BRAND = kite_set[0]['brand__name'] if kite_set else 'None'
+        return kite_set
+    
+        # brand = models.Brand.objects.get(slug=slug)
+        # return brand.kite_set.values('name').filter(is_published=True).distinct()
+        # return models.Kite.objects.filter(brand=brand, is_published=True)
 
 
 class Kite(utils.DataMixin, ListView):
-    model = models.Kite
     template_name = 'kites/kite.html'
 
     def get_context_data(self, **kwargs):
@@ -62,15 +61,14 @@ class Kite(utils.DataMixin, ListView):
 
         c = context['object_list'][0]
         context_user = self.get_user_context(title=c.name,
-                                             brand_selected=c.brand_id,
-                                             )
+                                             brand=c.brand.name)
         return context | context_user
 
     def get_queryset(self):
         return models.Kite.objects\
-            .filter(name=self.kwargs['slug'], 
-                    is_published=True)\
-                .order_by('time_create')\
+                    .filter(name=self.kwargs['slug'], 
+                            is_published=True)\
+                    .order_by('time_create')\
                     # .select_related('expert')
 
 
@@ -89,11 +87,15 @@ class AddKite(LoginRequiredMixin, utils.DataMixin, CreateView):
         return redirect('home')
 
 
-class KiteEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
+class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateView):
     model = models.Kite
     form_class = forms.KiteForm
     template_name = 'kites/form_as_p.html'
     slug_field = 'pk'
+
+    def test_func(self):
+        k = models.Kite.objects.get(pk=self.kwargs['slug'])
+        return self.request.user.id == k.expert_id
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -105,16 +107,15 @@ class KiteEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
     
 
 @login_required
-def kite_del(request, id, slug):
-    print(id, slug)
-    models.Kite.objects.get(pk=id).delete()
-    return redirect('kite', slug=slug)
+def kite_del(request, id):
+    k = models.Kite.objects.get(pk=id)
+    if request.user.id == k.expert_id:
+        k.delete()
+    return redirect(request.GET.get('next', 'home'))
 
     
 class Expert(utils.DataMixin, ListView):
-    model = models.Expert
     template_name = 'kites/expert.html'
-    # slug_url_kwarg = 'slug'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -122,10 +123,9 @@ class Expert(utils.DataMixin, ListView):
         return context | context_user
 
     def get_queryset(self):
-        # print(self.kwargs.get('slug'))
         if self.kwargs.get('slug'):
             return models.Expert.objects\
-                .filter(name__username=self.kwargs['slug'])\
+                    .filter(name__username=self.kwargs['slug'])\
                     # .select_related('expert')
         return models.Expert.objects.all()
 
@@ -162,7 +162,7 @@ class UserRegister(utils.DataMixin, CreateView):
     def form_valid(self, form):
         'метод вызывается при успешной отправке формы и делает автологин'
         print(form.cleaned_data) # данные формы
-        # form.instance.is_active = False
+        # form.instance.is_active = False # деактивация пользователя
         user = form.save()
         'создание эксперта на основе формы юзера'
         models.Expert.objects.create(name=user)
@@ -194,8 +194,9 @@ class UserProfile(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, Deta
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context_user = self.get_user_context(title=self.kwargs['slug'])
-        context['expert_kites'] = models.Kite.objects.filter(#is_published=False,
-                                                              expert=self.request.user.id).order_by('is_published', 'brand', 'name')
+        context['expert_kites'] = models.Kite.objects\
+                                    .filter(expert=self.request.user.id)\
+                                    .order_by('is_published', 'brand')
         return context | context_user
 
 

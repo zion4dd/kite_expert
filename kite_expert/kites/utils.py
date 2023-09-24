@@ -6,10 +6,12 @@ class DataMixin:
 
     def get_user_context(self, **kwargs):
         context = kwargs
-        context['brands'] = models.Brand.objects.filter(kite__is_published=True).annotate(Count('kite')).order_by('name')
+        context['brands'] = models.Brand.objects\
+            .filter(kite__is_published=True)\
+                .annotate(Count('kite'))
     
-        if 'brand_selected' not in context:
-            context['brand_selected'] = 0
+        # if 'brand_selected' not in context:
+        #     context['brand_selected'] = 0
         
         return context
         

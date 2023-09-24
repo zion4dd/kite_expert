@@ -62,7 +62,8 @@
 
 <p>
     <a href="{{ i.get_kiteedit_url }}">Edit</a> | 
-    <a href="{{ i.get_kitedel_url }}" onClick="return window.confirm('Confirm?');">Delete</a>
+    <a href="{{ i.get_kitedel_url }}?next={{ request.path|urlencode }}" 
+    onClick="return window.confirm('Confirm?');">Delete</a>
 </p>
 
 {% if not forloop.last %}

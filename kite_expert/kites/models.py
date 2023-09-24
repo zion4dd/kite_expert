@@ -19,6 +19,7 @@ class Expert(models.Model):
 #TODO slug
 class Kite(models.Model):
     name = models.CharField(max_length=100)
+    
     text = models.TextField(blank=True)
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
@@ -37,10 +38,13 @@ class Kite(models.Model):
         return reverse('kiteedit', kwargs={'slug': self.pk})
     
     def get_kitedel_url(self):
-        return reverse('kitedel', kwargs={'slug': self.name, 'id': self.pk})
+        return reverse('kitedel', kwargs={'id': self.pk})
 
     def get_expert_url(self):
         return reverse('expert', kwargs={'slug': self.expert})
+    
+    class Meta:
+        ordering = ['name',]
     
     
 class Brand(models.Model):
@@ -57,3 +61,6 @@ class Brand(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['name',]

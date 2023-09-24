@@ -1,6 +1,7 @@
 {% extends 'kites/base.html' %}
 
 {% block content %}
+<h1>{{ brand }}</h1>
 <h1>{{ title }}</h1>
 
 
@@ -42,7 +43,8 @@
 {% if i.expert == user %}
 <!-- <p><a href="{% url 'kiteedit' i.pk %}">Edit</a></p> -->
 <p><a href="{{ i.get_kiteedit_url }}">Edit</a></p>
-<p><a href="{{ i.get_kitedel_url }}" onClick="return window.confirm('Confirm?');">Delete</a></p>
+<p><a href="{{ i.get_kitedel_url }}?next={{ request.path|urlencode }}" 
+    onClick="return window.confirm('Confirm?');">Delete</a></p>
 {% endif %}
 
 <p>last update: {{ i.time_update|date:'Y-m-d' }}</p>

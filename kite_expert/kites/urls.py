@@ -2,6 +2,7 @@ from django.urls import path
 
 from kites import views
 
+
 urlpatterns = [
     path('', views.Index.as_view(), name='home'),
     path('index/', views.Index.as_view(), name='home'),
@@ -13,7 +14,7 @@ urlpatterns = [
 
     path('kite/add/', views.AddKite.as_view(), name='addkite'),
     path('kite/edit/<slug:slug>/', views.KiteEdit.as_view(), name='kiteedit'),
-    path('kite/del/<slug:slug>/<int:id>', views.kite_del, name='kitedel'),
+    path('kite/del/<int:id>', views.kite_del, name='kitedel'),
     path('kite/<slug:slug>/', views.Kite.as_view(), name='kite'),
 
     path('expert/', views.Expert.as_view(), name='experts'),

@@ -155,6 +155,11 @@ label {
     border-radius: 20%;
 }
 
+.bottom {
+    height: 50px;
+    width: 100%;
+}
+
 
 @media screen and (max-width: 576px) {
     .head {
