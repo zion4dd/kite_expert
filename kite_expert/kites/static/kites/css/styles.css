@@ -102,6 +102,8 @@ label {
 
 .sidenav__details {
     display: none;
+    font-size: 24px;
+    line-height: 5px;
 }
 
 .sidenav__not_details {
@@ -114,6 +116,11 @@ label {
     width: 100%;
     height: 100%;
     padding-top: 50px;
+}
+
+.anchor {
+    padding-top: 150px;
+    margin-top: -150px;
 }
 
 .btn {
@@ -162,10 +169,7 @@ label {
 
 
 @media screen and (max-width: 576px) {
-    .head {
-        font-size: 18px;
-    }
-
+    
     /* .main {
         flex-direction: column;
         align-items: flex-start;
@@ -176,14 +180,12 @@ label {
         width: 100%;
         height: unset;
         padding: 0px 20px;
-        font-size: 18px;
-        line-height: 5px;
     }
-
+    
     .sidenav__details {
         display: unset;
     }
-
+    
     .sidenav__not_details {
         display: none;
     }
@@ -192,11 +194,11 @@ label {
         margin: 0px 20px;
         padding: 70px 0px;
     }
-
+    
     .btn {
         width: -webkit-fill-available;
     }
-
+    
     .img-block {
         width: 100px;
         height: 100px;
@@ -205,15 +207,23 @@ label {
 }
 
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 350px) {
     label {
         width: 70px;
     }
-
+    
     textarea {
         width: 90%;
     }
+    
+    .head {
+        font-size: 18px;
+    }
+    
+    .sidenav__details {
+        font-size: 18px;
 
+    }
     /* .head__left > p {
         margin: 5px;
 

@@ -13,7 +13,7 @@ class Expert(models.Model):
     def __str__(self) -> str:
         return self.name
     
-    def get_absolute_url(self): # для отображения записей БД
+    def get_absolute_url(self):
         return reverse('expert', kwargs={'slug': self.name})
 
 
@@ -44,7 +44,6 @@ class Kite(models.Model):
         return reverse('expert', kwargs={'slug': self.expert})
     
     def save(self, *args, **kwargs):
-        # if not self.slug:
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
@@ -59,7 +58,7 @@ class Brand(models.Model):
     def __str__(self) -> str:
         return self.name
     
-    def get_absolute_url(self): # для отображения записей БД
+    def get_absolute_url(self):
         return reverse('brand', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):

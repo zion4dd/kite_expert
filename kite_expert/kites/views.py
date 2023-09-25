@@ -3,9 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import models
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 
 from kites import models
 from kites import utils
@@ -45,9 +45,9 @@ class Brand(utils.DataMixin, ListView):
         self.BRAND = kite_set[0]['brand__name'] if kite_set else 'None'
         return kite_set
     
-        # brand = models.Brand.objects.get(slug=slug)
-        # return brand.kite_set.values('name').filter(is_published=True).distinct()
-        # return models.Kite.objects.filter(brand=brand, is_published=True)
+        # self.BRAND = models.Brand.objects.get(slug=slug)
+        # return self.BRAND.kite_set.values('name').filter(is_published=True).distinct()
+        # return models.Kite.objects.filter(brand=self.BRAND, is_published=True)
 
 
 class Kite(utils.DataMixin, ListView):
@@ -71,7 +71,7 @@ class Kite(utils.DataMixin, ListView):
                     # .select_related('expert')
 
 
-class AddKite(LoginRequiredMixin, utils.DataMixin, CreateView):
+class KiteAdd(LoginRequiredMixin, utils.DataMixin, CreateView):
     form_class = forms.KiteForm
     template_name = 'kites/form_as_p.html'
     
@@ -83,7 +83,7 @@ class AddKite(LoginRequiredMixin, utils.DataMixin, CreateView):
     def form_valid(self, form):
         form.instance.expert = self.request.user
         form.save()
-        return redirect('home')
+        return redirect(reverse_lazy('kite', kwargs={'slug': form.instance.slug}))
 
 
 class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateView):
@@ -101,7 +101,9 @@ class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateV
         return context | context_user
     
     def get_success_url(self):
-        return reverse_lazy('home')
+        if self.object.is_published:
+            return reverse_lazy('kite', kwargs={'slug': self.object.slug})
+        return reverse_lazy('profile', kwargs={'slug': self.request.user.username}) + '#' + self.object.slug
     
 
 @login_required
@@ -144,7 +146,7 @@ class ExpertEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, Updat
         return context | context_user
     
     def get_success_url(self):
-        return reverse_lazy('experts')
+        return reverse_lazy('profile', kwargs={'slug': self.request.user.username})
     
 
 class UserRegister(utils.DataMixin, CreateView):

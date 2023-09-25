@@ -13,10 +13,12 @@
 </p>
 <p>{{ object.about|linebreaks }}</p>
 <p><a href="{% url 'expertedit' object.name %}">Edit profile</a></p>
-<hr>
 
+<h1>Posts:</h1>
 
 {% for i in expert_kites %}
+
+<div id="{{ i.slug }}" class="anchor"></div>
 
 {% if not i.is_published %}
 <h3 class="btn">Not published!</h3>
@@ -69,8 +71,6 @@
 {% if not forloop.last %}
 <hr>
 {% endif %}
-
-
 
 {% endfor %}
 
