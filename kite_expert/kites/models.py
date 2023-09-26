@@ -34,7 +34,7 @@ class Kite(models.Model):
     def __str__(self) -> str:
         return self.name
     
-    def get_kiteedit_url(self): # для отображения записей БД
+    def get_kiteedit_url(self):
         return reverse('kiteedit', kwargs={'pk': self.pk})
     
     def get_kitedel_url(self):

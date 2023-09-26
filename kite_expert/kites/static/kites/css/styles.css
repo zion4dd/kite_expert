@@ -1,3 +1,4 @@
+
 #color11 {
     color: #066;
     color: #9cc;
@@ -59,25 +60,14 @@ label {
 
 .head__left {
     width: 70%;
-    float: left;
     margin: auto;
     text-align: left;
 }
 
 .head__right {
     width: 30%;
-    float: right;
     margin: auto;
     text-align: right;
-}
-
-/* .head__logo {
-    width: 184px;
-    height: 45px;
-} */
-
-.main {
-    display: flex;
 }
 
 .sidenav {
@@ -86,11 +76,10 @@ label {
     width: -moz-fit-content;
     width: fit-content;
     position: fixed;
-    left: 0;
     background-color: #9cc;
     overflow-x: hidden;
     padding: 50px 30px;
-    /* color: #000; */
+    color: #000;
 }
 
 .sidenav a {
@@ -112,15 +101,12 @@ label {
 
 .content {
     margin-left: 200px;
-    padding: 0px 100px;
-    width: 100%;
-    height: 100%;
-    padding-top: 50px;
+    padding: 50px 30px 50px 100px;
 }
 
 .anchor {
-    padding-top: 150px;
     margin-top: -150px;
+    padding-top: 150px;
 }
 
 .btn {
@@ -153,6 +139,7 @@ label {
     display: inline-block;
     width: 200px;
     height: 200px;
+    margin: 5px;
     background-size: cover;
     overflow:hidden;
 }
@@ -162,19 +149,13 @@ label {
     border-radius: 20%;
 }
 
-.bottom {
+/* .bottom {
     height: 50px;
     width: 100%;
-}
+} */
 
 
 @media screen and (max-width: 576px) {
-    
-    /* .main {
-        flex-direction: column;
-        align-items: flex-start;
-    } */
-    
     .sidenav {
         position: fixed;
         width: 100%;
@@ -200,10 +181,9 @@ label {
     }
     
     .img-block {
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
     }
-
 }
 
 
@@ -224,11 +204,9 @@ label {
         font-size: 18px;
 
     }
-    /* .head__left > p {
-        margin: 5px;
 
+    .img-block {
+        width: 100px;
+        height: 100px;
     }
-    .head__right > p {
-        margin: 5px;
-    } */
 }

@@ -1,0 +1,12 @@
+<ul>
+    <li>
+        <a href="{% url 'home' %}">ALL</a>
+    </li>
+    {% for i in brands %}
+    {% if i.kite__count > 0 %}
+    <li>
+        <a href="{{ i.get_absolute_url }}">{{ i.name }}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
