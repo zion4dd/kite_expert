@@ -1,0 +1,30 @@
+<p>
+    {% if i.photo1 %}
+    <div class="img-block">
+        <a href="{{ i.photo1.url }}" title="open">
+            <img class="img-kite" src="{{ i.photo1.url }}" alt="Kite_img_1">
+        </a>
+    </div>
+    {% endif %}
+    {% if i.photo2 %}
+    <div class="img-block">
+        <a href="{{ i.photo2.url }}" title="open">
+            <img class="img-kite" src="{{ i.photo2.url }}" alt="Kite_img_2">
+        </a>
+    </div>
+    {% endif %}
+    {% if i.photo3 %}
+    <div class="img-block">
+        <a href="{{ i.photo3.url }}" title="open">
+            <img class="img-kite" src="{{ i.photo3.url }}" alt="Kite_img_3">
+        </a>
+    </div>
+    {% endif %}
+    {% if i.photo4 %}
+    <div class="img-block">
+        <a href="{{ i.photo4.url }}" title="open">
+            <img class="img-kite" src="{{ i.photo4.url }}" alt="Kite_img_4">
+        </a>
+    </div>
+    {% endif %}
+</p>

@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', 'kite-expert.ru', 'www.kite-expert.ru']
 
+CSRF_TRUSTED_ORIGINS = ['https://*.kite-expert.ru', 'https://*.127.0.0.1']
 
 # Application definition
 

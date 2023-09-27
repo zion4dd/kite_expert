@@ -4,44 +4,13 @@
 <h1>{{ brand }}</h1>
 <h1>{{ title }}</h1>
 
-
 {% for i in object_list %}
 <p><a class="btn" href="{{ i.get_expert_url }}">{{ i.expert }}</a></p>
 <p>{{ i.text|linebreaks }}</p>
 
-<p>
-    {% if i.photo1 %}
-    <div class="img-block">
-        <a href="{{ i.photo1.url }}" title="open">
-            <img class="img-kite" src="{{ i.photo1.url }}/" alt="">
-        </a>
-    </div>
-    {% endif %}
-    {% if i.photo2 %}
-    <div class="img-block">
-        <a href="{{ i.photo2.url }}" title="open">
-            <img class="img-kite" src="{{ i.photo2.url }}/" alt="">
-        </a>
-    </div>
-    {% endif %}
-    {% if i.photo3 %}
-    <div class="img-block">
-        <a href="{{ i.photo3.url }}" title="open">
-            <img class="img-kite" src="{{ i.photo3.url }}/" alt="">
-        </a>
-    </div>
-    {% endif %}
-    {% if i.photo4 %}
-    <div class="img-block">
-        <a href="{{ i.photo4.url }}" title="open">
-            <img class="img-kite" src="{{ i.photo4.url }}/" alt="">
-        </a>
-    </div>
-    {% endif %}
-</p>
+{% include "kites/blockimage.html" %}
 
 {% if i.expert == user %}
-<!-- <p><a href="{% url 'kiteedit' i.pk %}">Edit</a></p> -->
 <p><a href="{{ i.get_kiteedit_url }}">Edit</a></p>
 <p><a href="{{ i.get_kitedel_url }}?next={{ request.path|urlencode }}" 
     onClick="return window.confirm('Confirm?');">Delete</a></p>
