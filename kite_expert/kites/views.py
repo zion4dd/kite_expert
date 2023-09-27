@@ -11,6 +11,8 @@ from kites import models
 from kites import utils
 from kites import forms
 
+from kite_expert.settings import USER_IS_ACTIVE
+
 
 class Index(utils.DataMixin, ListView):
     template_name = 'kites/index.html'
@@ -159,13 +161,13 @@ class UserRegister(utils.DataMixin, CreateView):
         return context | context_user
 
     def form_valid(self, form):
-        'метод вызывается при успешной отправке формы и делает автологин'
-        print(form.cleaned_data) # данные формы
-        # form.instance.is_active = False # деактивация пользователя
+        'метод вызывается при успешной отправке формы'
+        if USER_IS_ACTIVE:
+            login(self.request, user) # автологин
+        else: # деактивация пользователя
+            form.instance.is_active = False
         user = form.save()
-        'создание эксперта на основе формы юзера'
-        models.Expert.objects.create(user=user)
-        login(self.request, user)
+        models.Expert.objects.create(user=user) # создание эксперта для юзера
         return redirect('home')
     
 

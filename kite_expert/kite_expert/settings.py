@@ -24,11 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-j@j+lhq(py53277eo2no9!=b)!^5c(0#+))_dtoh5z08j0#p0v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+USER_IS_ACTIVE = True ### user register set field 'is_active'
 
 ALLOWED_HOSTS = ['localhost', 'kite-expert.ru', 'www.kite-expert.ru']
 
-CSRF_TRUSTED_ORIGINS = ['https://*.kite-expert.ru', 'https://*.127.0.0.1'] # !!!
+CSRF_TRUSTED_ORIGINS = ['https://*.kite-expert.ru', 'https://*.127.0.0.1'] ###
 
 # Application definition
 
