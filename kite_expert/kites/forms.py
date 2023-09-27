@@ -89,7 +89,8 @@ def resize_image(image):
     max_size = 1200
     im = Image.open(BytesIO(image.read()))
     w, h = im.size
-    
+    format = im.format
+        
     cut = abs(w - h) // 2
     if w >= h: 
         box = (cut, 0, w - cut, h)
@@ -100,7 +101,7 @@ def resize_image(image):
         im = im.resize(size=(max_size, max_size))
 
     new_image = BytesIO()
-    im.save(new_image, format='JPEG')
+    im.save(new_image, format=format)
     new_image = ContentFile(new_image.getvalue())
     return InMemoryUploadedFile(new_image, None, image.name, image.content_type, None, None)
         
