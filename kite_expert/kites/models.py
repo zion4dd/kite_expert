@@ -5,16 +5,16 @@ from django.utils.text import slugify
 
 
 class Expert(models.Model):
-    name = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     about = models.TextField(blank=True)
     photo = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
     # slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     
     def __str__(self) -> str:
-        return self.name
+        return self.user.username
     
     def get_absolute_url(self):
-        return reverse('expert', kwargs={'slug': self.name})
+        return reverse('expert', kwargs={'slug': self.user})
 
 
 class Kite(models.Model):

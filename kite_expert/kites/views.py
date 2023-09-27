@@ -125,8 +125,7 @@ class Expert(utils.DataMixin, ListView):
     def get_queryset(self):
         if self.kwargs.get('slug'):
             return models.Expert.objects\
-                    .filter(name__username=self.kwargs['slug'])\
-                    # .select_related('expert')
+                    .filter(user__username=self.kwargs['slug'])
         return models.Expert.objects.all()
 
 
@@ -134,7 +133,7 @@ class ExpertEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, Updat
     model = models.Expert
     form_class = forms.ExpertForm
     template_name = 'kites/form_as_p.html'
-    slug_field = 'name__username'
+    slug_field = 'user__username'
     # fields = ['about', 'photo']
 
     def test_func(self):
@@ -165,7 +164,7 @@ class UserRegister(utils.DataMixin, CreateView):
         # form.instance.is_active = False # деактивация пользователя
         user = form.save()
         'создание эксперта на основе формы юзера'
-        models.Expert.objects.create(name=user)
+        models.Expert.objects.create(user=user)
         login(self.request, user)
         return redirect('home')
     
@@ -186,7 +185,7 @@ class UserLogin(utils.DataMixin, LoginView):
 class UserProfile(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, DetailView):
     model = models.Expert
     template_name = 'kites/profile.html'
-    slug_field = 'name__username'
+    slug_field = 'user__username'
 
     def test_func(self):
         return self.request.user.username == self.kwargs['slug']
