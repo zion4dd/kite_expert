@@ -5,7 +5,6 @@ from kites import views
 
 urlpatterns = [
     path('', views.Index.as_view(), name='home'),
-    path('index/', views.Index.as_view(), name='home'),
     path('register/', views.UserRegister.as_view(), name='register'),
     path('login/', views.UserLogin.as_view(), name='login'),
     path('logout/', views.user_logout, name='logout'),
