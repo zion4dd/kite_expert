@@ -163,10 +163,11 @@ class UserRegister(utils.DataMixin, CreateView):
     def form_valid(self, form):
         'метод вызывается при успешной отправке формы'
         if USER_IS_ACTIVE:
+            user = form.save()
             login(self.request, user) # автологин
         else: # деактивация пользователя
             form.instance.is_active = False
-        user = form.save()
+            user = form.save()
         models.Expert.objects.create(user=user) # создание эксперта для юзера
         return redirect('home')
     
