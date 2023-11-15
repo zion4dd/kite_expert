@@ -30,9 +30,15 @@ ul {
     font-weight: bold;
 }
 
-label {
-    display: block;
-    float: left;
+.form-field {
+    display: flex;
+    margin: 5px;
+    flex-wrap: wrap;
+}
+
+.form-label {
+    /* display: block; */
+    /* float: left; */
     width: 100px;
 }
 
@@ -125,12 +131,6 @@ label {
     margin-left: 20px;
 }
 
-/* .form-label {
-    display: block;
-    float: left;
-    width: 150px;
-} */
-
 /* .form-error {
     color: brown;
 } */
@@ -188,12 +188,12 @@ label {
 
 
 @media screen and (max-width: 350px) {
-    label {
-        width: 70px;
-    }
-    
     textarea {
-        width: 90%;
+        width: 100%;
+    }
+
+    .form-field {
+        flex-direction: column;
     }
     
     .head {

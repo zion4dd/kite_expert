@@ -26,8 +26,6 @@ class UserLoginForm(AuthenticationForm):
 
 
 class KiteForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     class Meta:
         model = models.Kite
@@ -65,8 +63,8 @@ class BrandForm(forms.ModelForm):
 
 
 class ExpertForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
 
     class Meta:
         model = models.Expert

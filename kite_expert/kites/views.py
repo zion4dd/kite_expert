@@ -75,14 +75,14 @@ class Kite(utils.DataMixin, ListView):
 
 class KiteAdd(LoginRequiredMixin, utils.DataMixin, CreateView):
     form_class = forms.KiteForm
-    template_name = 'kites/form_as_p.html'
+    template_name = 'kites/form_cycle_for.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context_user = self.get_user_context(title='Add kite')
         return context | context_user
     
-    def form_valid(self, form):
+    def form_valid(self, form):# FIXME to forms.py
         form.instance.expert = self.request.user
         form.save()
         return redirect(reverse_lazy('kite', kwargs={'slug': form.instance.slug}))
@@ -91,7 +91,7 @@ class KiteAdd(LoginRequiredMixin, utils.DataMixin, CreateView):
 class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateView):
     model = models.Kite
     form_class = forms.KiteForm
-    template_name = 'kites/form_as_p.html'
+    template_name = 'kites/form_cycle_for.html'
 
     def test_func(self):
         k = models.Kite.objects.get(pk=self.kwargs['pk'])
@@ -134,7 +134,7 @@ class Expert(utils.DataMixin, ListView):
 class ExpertEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateView):
     model = models.Expert
     form_class = forms.ExpertForm
-    template_name = 'kites/form_as_p.html'
+    template_name = 'kites/form_cycle_for.html'
     slug_field = 'user__username'
     # fields = ['about', 'photo']
 
@@ -152,7 +152,7 @@ class ExpertEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, Updat
 
 class UserRegister(utils.DataMixin, CreateView):
     form_class = forms.UserRegisterForm
-    template_name = 'kites/form_as_p.html'
+    template_name = 'kites/form_cycle_for.html'
     success_url = reverse_lazy('home')
     
     def get_context_data(self, **kwargs):
@@ -174,7 +174,7 @@ class UserRegister(utils.DataMixin, CreateView):
 
 class UserLogin(utils.DataMixin, LoginView):
     form_class = forms.UserLoginForm
-    template_name = 'kites/form_as_p.html'
+    template_name = 'kites/form_cycle_for.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
