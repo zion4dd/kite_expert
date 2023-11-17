@@ -1,11 +1,15 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from django.core.files.images import get_image_dimensions
 from django.db.models.fields.files import ImageFieldFile
 from django.utils.text import slugify
 from django import forms
+from django.forms.widgets import ClearableFileInput
 
 from kites import models
+
+
+class CustomClearableFileInput(ClearableFileInput):
+    template_name = 'overrides\clearable_file_input.html'
 
 
 class UserRegisterForm(UserCreationForm):
@@ -24,12 +28,17 @@ class UserLoginForm(AuthenticationForm):
     username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-name'}))
     password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-name'}))
 
-
 class KiteForm(forms.ModelForm):
 
     class Meta:
         model = models.Kite
         fields = ['brand', 'name', 'text', 'photo1', 'photo2', 'photo3', 'photo4', 'is_published']
+        widgets = {
+            'photo1': CustomClearableFileInput,
+            'photo2': CustomClearableFileInput,
+            'photo3': CustomClearableFileInput,
+            'photo4': CustomClearableFileInput,
+        }
 
     def clean_name(self):
         return self.cleaned_data['name'].upper()
@@ -69,6 +78,9 @@ class ExpertForm(forms.ModelForm):
     class Meta:
         model = models.Expert
         fields = ['about', 'photo']
+        widgets = {
+            'photo': CustomClearableFileInput,
+        }
 
     def clean_photo(self):
         img = self.cleaned_data.get('photo')

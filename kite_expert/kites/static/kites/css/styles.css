@@ -1,24 +1,23 @@
-
-#color11 {
-    color: #066;
-    color: #9cc;
-    color: #ffc;
-    color: #f96;
-    color: #f63;
+:root {
+    --color1: #007765;
+    --color2: #00c3a6;
+    --color3: #f5f5dc;
+    --color4: #c3001e;
+    --color5: brown;
 }
 
-#color22 {
-    color: #007765;
-    color: #00c3a6;
-    color: #f5f5dc;
-    color: #c3001e;
-    color: brown;
+:root {
+    --color1: #066;
+    --color2: #9cc;
+    --color3: #ffc;
+    --color4: #f96;
+    --color5: #f63;
 }
 
 body {
     margin: 0;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    background-color: #ffc;
+    background-color: var(--color3);
     color: #000;
     /* background-image: url(rs_white.webp);
     background-attachment: fixed; */
@@ -47,16 +46,16 @@ ul {
     top: 0;
     display: flex;
     flex-wrap: wrap;
-    background: #066;
+    background: var(--color1);
     padding: 0px 20px;
     font-size: 24px;
     line-height: 5px;
-    color: #9cc;
+    color: var(--color2);
 }
 
 .head a {
     text-decoration: none;
-    color: #9cc;
+    color: var(--color2);
 }
 
 .head__user {
@@ -82,7 +81,7 @@ ul {
     width: -moz-fit-content;
     width: fit-content;
     position: fixed;
-    background-color: #9cc;
+    background-color: var(--color2);
     overflow-x: hidden;
     padding: 50px 30px;
     color: #000;
@@ -119,7 +118,7 @@ ul {
     display: inline-block; /* Строчно-блочный элемент */
     min-width: 200px;
     border-radius: 3px;
-    background: #f96;
+    background: var(--color4);
     padding: .5rem 1.5rem;
     text-decoration: none; /* Убираем подчёркивание */
     font-weight: bold;
