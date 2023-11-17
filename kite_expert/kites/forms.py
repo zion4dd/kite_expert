@@ -9,7 +9,7 @@ from kites import models
 
 
 class CustomClearableFileInput(ClearableFileInput):
-    template_name = 'overrides\clearable_file_input.html'
+    template_name = 'overrides/clearable_file_input.html'
 
 
 class UserRegisterForm(UserCreationForm):
