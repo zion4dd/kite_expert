@@ -8,7 +8,7 @@ from django.forms.widgets import ClearableFileInput
 from kites import models
 
 
-class CustomClearableFileInput(ClearableFileInput):
+class ThumbnailImageInput(ClearableFileInput):
     template_name = 'overrides/clearable_file_input.html'
 
 
@@ -34,10 +34,10 @@ class KiteForm(forms.ModelForm):
         model = models.Kite
         fields = ['brand', 'name', 'text', 'photo1', 'photo2', 'photo3', 'photo4', 'is_published']
         widgets = {
-            'photo1': CustomClearableFileInput,
-            'photo2': CustomClearableFileInput,
-            'photo3': CustomClearableFileInput,
-            'photo4': CustomClearableFileInput,
+            'photo1': ThumbnailImageInput,
+            'photo2': ThumbnailImageInput,
+            'photo3': ThumbnailImageInput,
+            'photo4': ThumbnailImageInput,
         }
 
     def clean_name(self):
@@ -79,7 +79,7 @@ class ExpertForm(forms.ModelForm):
         model = models.Expert
         fields = ['about', 'photo']
         widgets = {
-            'photo': CustomClearableFileInput,
+            'photo': ThumbnailImageInput,
         }
 
     def clean_photo(self):

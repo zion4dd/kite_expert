@@ -19,8 +19,8 @@ class Index(utils.DataMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context_user = self.get_user_context(title='All kites')
-        return context | context_user
+        context |= self.get_user_context(title='All kites') # dict.update()
+        return context
 
     def get_queryset(self):
         return models.Kite.objects\
@@ -35,8 +35,8 @@ class Brand(utils.DataMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context_user = self.get_user_context(title=self.BRAND)
-        return context | context_user
+        context |= self.get_user_context(title=self.BRAND)
+        return context
 
     def get_queryset(self):
         slug = self.kwargs['slug']
@@ -61,9 +61,9 @@ class Kite(utils.DataMixin, ListView):
             return self.get_user_context(title=self.kwargs['slug'])
 
         c = context['object_list'][0]
-        context_user = self.get_user_context(title=c.name,
-                                             brand=c.brand.name)
-        return context | context_user
+        context |= self.get_user_context(title=c.name,
+                                        brand=c.brand.name)
+        return context
 
     def get_queryset(self):
         return models.Kite.objects\
@@ -79,10 +79,10 @@ class KiteAdd(LoginRequiredMixin, utils.DataMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context_user = self.get_user_context(title='Add kite')
-        return context | context_user
+        context |= self.get_user_context(title='Add kite')
+        return context
     
-    def form_valid(self, form):# FIXME to forms.py
+    def form_valid(self, form):
         form.instance.expert = self.request.user
         form.save()
         return redirect(reverse_lazy('kite', kwargs={'slug': form.instance.slug}))
@@ -99,8 +99,8 @@ class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateV
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context_user = self.get_user_context(title='Kite edit')
-        return context | context_user
+        context |= self.get_user_context(title='Kite edit')
+        return context
     
     def get_success_url(self):
         if self.object.is_published:
@@ -121,8 +121,8 @@ class Expert(utils.DataMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context_user = self.get_user_context(title='Experts')
-        return context | context_user
+        context |= self.get_user_context(title='Experts')
+        return context
 
     def get_queryset(self):
         if self.kwargs.get('slug'):
@@ -143,8 +143,8 @@ class ExpertEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, Updat
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context_user = self.get_user_context(title='Expert edit')
-        return context | context_user
+        context |= self.get_user_context(title='Expert edit')
+        return context
     
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'slug': self.request.user.username})
@@ -157,8 +157,8 @@ class UserRegister(utils.DataMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context_user = self.get_user_context(title='Register')
-        return context | context_user
+        context |= self.get_user_context(title='Register')
+        return context
 
     def form_valid(self, form):
         'метод вызывается при успешной отправке формы'
@@ -178,8 +178,8 @@ class UserLogin(utils.DataMixin, LoginView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context_user = self.get_user_context(title='Login')
-        return context | context_user
+        context |= self.get_user_context(title='Login')
+        return context
     
     def get_success_url(self):
         return reverse_lazy('home')
@@ -195,11 +195,12 @@ class UserProfile(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, Deta
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context_user = self.get_user_context(title=self.kwargs['slug'])
-        context['expert_kites'] = models.Kite.objects\
-                                    .filter(expert=self.request.user.id)\
-                                    .order_by('is_published', 'brand')
-        return context | context_user
+        expert_kites = models.Kite.objects\
+            .filter(expert=self.request.user.id)\
+                .order_by('is_published', 'brand')
+        context |= self.get_user_context(title=self.kwargs['slug'], 
+                                         expert_kites=expert_kites)
+        return context
 
 
 def user_logout(request):
