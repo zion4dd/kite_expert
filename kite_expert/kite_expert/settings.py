@@ -30,6 +30,8 @@ USER_IS_ACTIVE = True ### user register set field 'is_active'
 
 ALLOWED_HOSTS = ['localhost', 'kite-expert.ru', 'www.kite-expert.ru']
 
+INTERNAL_IPS = ['127.0.0.1']
+
 CSRF_TRUSTED_ORIGINS = ['https://*.kite-expert.ru', 'https://*.127.0.0.1'] ###
 
 # Application definition
@@ -42,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'kites.apps.KitesConfig',
+    "kites.apps.KitesConfig",
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -53,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware"
 ]
 
 ROOT_URLCONF = 'kite_expert.urls'

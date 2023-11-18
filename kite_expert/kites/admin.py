@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
@@ -12,7 +14,7 @@ class KiteAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'name')
     list_editable = ('is_published',)
     list_filter = ('is_published', 'time_create', 'expert')
-    fields = ('brand', 'name', 'text', 'is_published', 'expert', 'photos', 'photo1', 'photo2', 'photo3', 'photo4')
+    fields = ('brand', 'name', 'text', 'is_published', 'expert', 'photo1', 'photo2', 'photo3', 'photo4')
     ordering = ( 'brand', 'name')
     list_per_page = 10
     readonly_fields = ('photos', )
@@ -41,6 +43,16 @@ class BrandAdmin(admin.ModelAdmin):
     # prepopulated_fields = {'slug': ('name', )}
 
 
+admin.site.unregister(User)
+
+@admin.register(User)
+class CustomUserAdmin(UserAdmin):
+    list_display = ('id', 'username', 'email', 'is_staff', 'is_active', 'date_joined')
+    list_display_links = ('id', 'username')
+    # list_editable = ('is_active',)
+
+
 # admin.site.register(models.Kite, KiteAdmin)
 # admin.site.register(models.Brand, BrandAdmin)
 # admin.site.register(models.Expert, ExpertAdmin)
+# admin.site.register(User, CustomUserAdmin)

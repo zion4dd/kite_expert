@@ -28,6 +28,7 @@ class UserLoginForm(AuthenticationForm):
     username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-name'}))
     password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-name'}))
 
+
 class KiteForm(forms.ModelForm):
 
     class Meta:

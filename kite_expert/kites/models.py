@@ -34,6 +34,9 @@ class Kite(models.Model):
     def __str__(self) -> str:
         return self.name
     
+    def get_absolute_url(self):
+        return reverse('kite', kwargs={'slug': self.slug})
+    
     def get_kiteedit_url(self):
         return reverse('kiteedit', kwargs={'pk': self.pk})
     
