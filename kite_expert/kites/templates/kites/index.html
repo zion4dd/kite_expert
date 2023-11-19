@@ -8,5 +8,17 @@
 <p><a href="{% url 'kite' i.slug %}" class="btn">{{ i.name|truncatechars:"20" }}</a></p>
 
 {% endfor %}
+<br>
+<nav>
+    {% if page_obj.has_other_pages %}
+    {% for page in paginator.page_range %}
+    {% if page_obj.number == page %}
+    <p class="page current-page">{{ page }}</p>
+    {% else %}
+    <a href="?page={{ page }}" class="page">{{ page }}</a>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+</nav>
 
 {% endblock %}
