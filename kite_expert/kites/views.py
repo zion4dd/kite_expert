@@ -1,4 +1,5 @@
 from typing import Dict, List
+
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
@@ -7,10 +8,12 @@ from django.db import models
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
+from django.core.cache import cache
 
 from kites import models
 from kites import utils
 from kites import forms
+from .tasks import resize_photo_kite, resize_photo_expert
 
 from kite_expert.settings import USER_IS_ACTIVE
 
@@ -65,7 +68,9 @@ class KiteAdd(LoginRequiredMixin, utils.DataMixin, CreateView):
     
     def form_valid(self, form):
         form.instance.expert = self.request.user
-        form.save()
+        kite = form.save()
+        resize_photo_kite.delay(kite.pk)
+        cache.clear()
         return super().form_valid(form)
         # auto redirect to get_absolute_url in models.Kite
         # return redirect(reverse_lazy('kite', kwargs={'slug': form.instance.slug}))
@@ -81,17 +86,26 @@ class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateV
         return self.request.user.id == self.get_object().expert_id
     
     def get_success_url(self):
+        # cache.clear()
         if self.object.is_published:
             return reverse_lazy('kite', kwargs={'slug': self.object.slug})
         return reverse_lazy('profile', kwargs={'slug': self.request.user.username}) + '#' + self.object.slug
     
+    def form_valid(self, form):
+        kite = form.save()
+        resize_photo_kite.delay(kite.pk)
+        cache.clear()
+        return super().form_valid(form)
+
 
 @login_required
 def kite_del(request, id):
     kite = models.Kite.objects.get(pk=id)
     if request.user.id == kite.expert_id:
         kite.delete()
-    return redirect(request.GET.get('next', 'home'))
+        cache.clear()
+    return redirect('home')
+    # return redirect(request.GET.get('next', 'home'))
 
     
 class Expert(utils.DataMixin, ListView):
@@ -116,6 +130,11 @@ class ExpertEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, Updat
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'slug': self.request.user.username})
+
+    def form_valid(self, form):
+        expert = form.save()
+        resize_photo_expert.delay(expert.pk)
+        return super().form_valid(form)
     
 
 class UserRegister(utils.DataMixin, CreateView):
@@ -142,6 +161,7 @@ class UserLogin(utils.DataMixin, LoginView):
     title_page = 'Login'
     
     def get_success_url(self):
+        cache.clear()
         return reverse_lazy('profile', kwargs={'slug': self.request.user.username})
         # return reverse_lazy('home')
 
@@ -167,5 +187,6 @@ class UserProfile(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, Deta
 
 def user_logout(request):
     logout(request)
+    cache.clear()
     return redirect('home')
 

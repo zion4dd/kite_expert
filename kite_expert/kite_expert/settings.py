@@ -28,6 +28,8 @@ DEBUG = False
 
 USER_IS_ACTIVE = True ### user register set field 'is_active'
 
+MAX_IMAGE_SIZE = 1200 ###
+
 ALLOWED_HOSTS = ['localhost', 'kite-expert.ru', 'www.kite-expert.ru']
 
 INTERNAL_IPS = ['127.0.0.1']
@@ -139,3 +141,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static') # общая папка
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 # в kite_expert/url.py добавить пути для режима Debug
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/5",
+        # "OPTIONS": {
+        #     "DB": 0,
+        #     "PASSWORD": 'pass',
+        #     "PARSER_CLASS": 'redis.connection.HiredisParser',
+        # }
+    }
+}

@@ -1,11 +1,12 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from django.db.models.fields.files import ImageFieldFile
+# from django.db.models.fields.files import ImageFieldFile
 from django.utils.text import slugify
 from django import forms
 from django.forms.widgets import ClearableFileInput
 
 from kites import models
+# from kite_expert.settings import MAX_IMAGE_SIZE
 
 
 class ThumbnailImageInput(ClearableFileInput):
@@ -47,21 +48,21 @@ class KiteForm(forms.ModelForm):
     def clean_slug(self):
         return slugify(self.cleaned_data['name'])
     
-    def clean_photo1(self):
-        img = self.cleaned_data.get('photo1')
-        return resize_image(img)
+    # def clean_photo1(self):
+    #     img = self.cleaned_data.get('photo1')
+    #     return resize_image(img)
     
-    def clean_photo2(self):
-        img = self.cleaned_data.get('photo2')
-        return resize_image(img)
+    # def clean_photo2(self):
+    #     img = self.cleaned_data.get('photo2')
+    #     return resize_image(img)
     
-    def clean_photo3(self):
-        img = self.cleaned_data.get('photo3')
-        return resize_image(img)
+    # def clean_photo3(self):
+    #     img = self.cleaned_data.get('photo3')
+    #     return resize_image(img)
     
-    def clean_photo4(self):
-        img = self.cleaned_data.get('photo4')
-        return resize_image(img)
+    # def clean_photo4(self):
+    #     img = self.cleaned_data.get('photo4')
+    #     return resize_image(img)
 
 
 class BrandForm(forms.ModelForm):
@@ -73,8 +74,6 @@ class BrandForm(forms.ModelForm):
 
 
 class ExpertForm(forms.ModelForm):
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
 
     class Meta:
         model = models.Expert
@@ -83,36 +82,38 @@ class ExpertForm(forms.ModelForm):
             'photo': ThumbnailImageInput,
         }
 
-    def clean_photo(self):
-        img = self.cleaned_data.get('photo')
-        return resize_image(img)
+#     def clean_photo(self):
+#         img = self.cleaned_data.get('photo')
+#         return resize_image(img)
 
 
-def resize_image(image):
-    from io import BytesIO
-    from django.core.files.base import ContentFile
-    from django.core.files.uploadedfile import InMemoryUploadedFile
-    from PIL import Image
+# сжимает фото до сохранения на диск
+# def resize_image(image):
+#     from io import BytesIO
+#     from django.core.files.base import ContentFile
+#     from django.core.files.uploadedfile import InMemoryUploadedFile
+#     from PIL import Image
 
-    if not image or isinstance(image, ImageFieldFile):
-        return image
+#     if not image or isinstance(image, ImageFieldFile):
+#         return image
     
-    max_size = 1200
-    im = Image.open(BytesIO(image.read()))
-    w, h = im.size
-    format = im.format
-        
-    cut = abs(w - h) // 2
-    if w >= h: 
-        box = (cut, 0, w - cut, h)
-    else: 
-        box = (0, cut, w, h - cut)
-    im = im.crop(box=box)
-    if im.width > max_size:
-        im = im.resize(size=(max_size, max_size))
+#     im = Image.open(BytesIO(image.read()))
 
-    new_image = BytesIO()
-    im.save(new_image, format=format)
-    new_image = ContentFile(new_image.getvalue())
-    return InMemoryUploadedFile(new_image, None, image.name, image.content_type, None, None)
+#     max_size = MAX_IMAGE_SIZE
+#     w, h = im.size
+#     format = im.format
+        
+#     cut = abs(w - h) // 2
+#     if w >= h: 
+#         box = (cut, 0, w - cut, h)
+#     else: 
+#         box = (0, cut, w, h - cut)
+#     im = im.crop(box=box)
+#     if im.width > max_size:
+#         im = im.resize(size=(max_size, max_size))
+
+#     new_image = BytesIO()
+#     im.save(new_image, format=format)
+#     new_image = ContentFile(new_image.getvalue())
+#     return InMemoryUploadedFile(new_image, None, image.name, image.content_type, None, None)
         
