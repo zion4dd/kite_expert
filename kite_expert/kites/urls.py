@@ -21,13 +21,14 @@ urlpatterns = [
     path('login/', views.UserLogin.as_view(), name='login'),
     path('logout/', views.user_logout, name='logout'),
 
-    path('profile/edit/', views.ExpertEdit.as_view(), name='expertedit'),
-    path('profile/<slug:slug>/', views.UserProfile.as_view(), name='profile'),
+    path('profile/edit/', views.UserProfileEdit.as_view(), name='profiledit'),
+    path('profile/', views.UserProfile.as_view(), name='profile'),
 
-    path('change-pass/', 
+    path('password/edit/', 
          PasswordChangeView.as_view(template_name='kites/form_cycle_for.html', 
-                                    success_url = reverse_lazy('home')), 
+                                    success_url = reverse_lazy('profile')), 
          name='password_change'),
+
     # path('change-done/', 
     #      PasswordChangeDoneView.as_view(template_name='kites/change_done.html'), 
     #      name='password_change_done'),

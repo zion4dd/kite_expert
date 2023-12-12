@@ -35,7 +35,7 @@
             {% if user.is_authenticated %}
             <p>
                 <a href="{% url 'kiteadd' %}">Add kite</a> | 
-                <a href="{% url 'profile' user %}">{{ user }}</a>
+                <a href="{% url 'profile' %}">{{ user }}</a>
             </p>
             {% endif %}
         </div>

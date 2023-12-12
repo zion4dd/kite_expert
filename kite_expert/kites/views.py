@@ -86,10 +86,10 @@ class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateV
         return self.request.user.id == self.get_object().expert_id
     
     def get_success_url(self):
-        # cache.clear()
+        # cache.clear()  # если не ипользуется метод form_valid (без celery)
         if self.object.is_published:
             return reverse_lazy('kite', kwargs={'slug': self.object.slug})
-        return reverse_lazy('profile', kwargs={'slug': self.request.user.username}) + '#' + self.object.slug
+        return reverse_lazy('profile') + '#' + self.object.slug
     
     def form_valid(self, form):
         kite = form.save()
@@ -118,25 +118,6 @@ class Expert(utils.DataMixin, ListView):
         return models.Expert.objects.all().select_related('user')
 
 
-class ExpertEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
-    model = models.Expert
-    form_class = forms.ExpertForm
-    template_name = 'kites/form_cycle_for.html'
-    slug_field = 'user__username'
-    title_page = 'Edit profile'
-    
-    def get_object(self):
-        return models.Expert.objects.get(user=self.request.user.pk)
-
-    def get_success_url(self):
-        return reverse_lazy('profile', kwargs={'slug': self.request.user.username})
-
-    def form_valid(self, form):
-        expert = form.save()
-        resize_photo_expert.delay(expert.pk)
-        return super().form_valid(form)
-    
-
 class UserRegister(utils.DataMixin, CreateView):
     form_class = forms.UserRegisterForm
     template_name = 'kites/form_cycle_for.html'
@@ -162,29 +143,46 @@ class UserLogin(utils.DataMixin, LoginView):
     
     def get_success_url(self):
         cache.clear()
-        return reverse_lazy('profile', kwargs={'slug': self.request.user.username})
-        # return reverse_lazy('home')
+        return reverse_lazy('profile')
 
 
-class UserProfile(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, DetailView):
-    # model = models.Expert
+class UserProfile(LoginRequiredMixin, utils.DataMixin, DetailView):
+    # model = models.Expert  # замена на queryset
     queryset = models.Expert.objects.select_related('user')
-    slug_field = 'user__username'
     template_name = 'kites/profile.html'
+    title_page = 'Profile'
 
-    def test_func(self):
-        return self.request.user.username == self.kwargs['slug']
-
+    def get_object(self):
+        return models.Expert.objects.get(user=self.request.user.pk)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        expert_kites = models.Kite.objects.filter(expert=self.request.user.id)\
-                                          .order_by('is_published', 'brand')\
-                                          .select_related('brand')
-        context.update(title=self.kwargs['slug'], 
-                       expert_kites=expert_kites)
+        context.update(expert_kites=models.Kite.objects\
+                                            .filter(expert=self.request.user.id)\
+                                            .order_by('is_published', 'brand')\
+                                            .select_related('brand'))
         return context
 
 
+class UserProfileEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
+    model = models.Expert
+    form_class = forms.ExpertForm
+    template_name = 'kites/form_cycle_for.html'
+    slug_field = 'user__username'
+    title_page = 'Edit profile'
+    
+    def get_object(self):
+        return models.Expert.objects.get(user=self.request.user.pk)
+
+    def get_success_url(self):
+        return reverse_lazy('profile')
+
+    def form_valid(self, form):
+        expert = form.save()
+        resize_photo_expert.delay(expert.pk)
+        return super().form_valid(form)
+    
+    
 def user_logout(request):
     logout(request)
     cache.clear()
