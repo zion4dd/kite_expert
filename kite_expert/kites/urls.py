@@ -1,5 +1,9 @@
 from django.urls import path
 from django.views.decorators.cache import cache_page
+from django.contrib.auth.views import (PasswordResetView, 
+                                       PasswordResetDoneView, 
+                                       PasswordResetConfirmView, 
+                                       PasswordResetCompleteView)
 
 from kites import views
 
@@ -25,7 +29,23 @@ urlpatterns = [
 
     path('password/edit/', views.UserPasswordChange.as_view(), name='password_change'),
 
-    # path('change-done/', 
-    #      PasswordChangeDoneView.as_view(template_name='kites/change_done.html'), 
-    #      name='password_change_done'),
+    path('password/reset/done/', 
+         PasswordResetDoneView.as_view(template_name='overrides/password_reset_done.html'), 
+         name="password_reset_done"),
+
+    path('password/reset/<uidb64>/<token>/', 
+         PasswordResetConfirmView.as_view(template_name='kites/form_cycle_for.html'), 
+         name='password_reset_confirm'),
+    
+    path('password/reset/complete/', 
+         PasswordResetCompleteView.as_view(template_name='overrides/password_reset_complete.html'), 
+         name='password_reset_complete'),
+    
+    path('password/reset/', 
+         PasswordResetView.as_view(template_name='kites/form_cycle_for.html',
+                                   email_template_name = "overrides/password_reset_email.html",
+                                   subject_template_name = "overrides/password_reset_subject.txt",
+                                   ), 
+         name='password_reset'),
+         
 ]

@@ -15,7 +15,7 @@ from kites import utils
 from kites import forms
 from .tasks import resize_photo_kite, resize_photo_expert
 
-from kite_expert.settings import USER_IS_ACTIVE
+from kite_expert.settings import USER_IS_ACTIVE, PROFILE_IMAGE
 
 
 class Index(utils.DataMixin, ListView):
@@ -111,6 +111,7 @@ def kite_del(request, id):
 class Expert(utils.DataMixin, ListView):
     template_name = 'kites/expert.html'
     title_page = 'Experts'
+    extra_context = {'profile_image': PROFILE_IMAGE}
 
     def get_queryset(self):
         if self.kwargs.get('slug'):
@@ -138,7 +139,7 @@ class UserRegister(utils.DataMixin, CreateView):
 
 class UserLogin(utils.DataMixin, LoginView):
     form_class = forms.UserLoginForm
-    template_name = 'kites/form_cycle_for.html'
+    template_name = 'kites/login.html'
     title_page = 'Login'
     
     def get_success_url(self):
@@ -151,6 +152,7 @@ class UserProfile(LoginRequiredMixin, utils.DataMixin, DetailView):
     queryset = models.Expert.objects.select_related('user')
     template_name = 'kites/profile.html'
     title_page = 'Profile'
+    extra_context = {'profile_image': PROFILE_IMAGE}
 
     def get_object(self):
         return models.Expert.objects.get(user=self.request.user.pk)

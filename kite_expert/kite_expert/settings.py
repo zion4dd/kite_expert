@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-j@j+lhq(py53277eo2no9!=b)!^5c(0#+))_dtoh5z08j0#p0v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 USER_IS_ACTIVE = True ### user register set field 'is_active'
 
@@ -46,8 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    "kites.apps.KitesConfig",
-    "debug_toolbar",
+    "kites.apps.KitesConfig", ###
+    "debug_toolbar", ###
+    "djcelery_email", ###
+    "rest_framework", ###
 ]
 
 MIDDLEWARE = [
@@ -58,7 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "debug_toolbar.middleware.DebugToolbarMiddleware"
+    "debug_toolbar.middleware.DebugToolbarMiddleware" ###
 ]
 
 ROOT_URLCONF = 'kite_expert.urls'
@@ -115,9 +117,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'ru'#'en-us'
+LANGUAGE_CODE = 'ru' #'en-us'
 
-TIME_ZONE = 'Europe/Moscow'#'UTC'
+TIME_ZONE = 'Europe/Moscow' #'UTC'
 
 USE_I18N = True
 
@@ -135,15 +137,22 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ###
+LOGIN_URL = "login"
+PROFILE_IMAGE = 'kites/images/profile.png'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static') # общая папка
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-# в kite_expert/url.py добавить пути для режима Debug
+# в kite_expert/urls.py добавить путь для режима Debug:
+# if settings.DEBUG:
+#   urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+# CASHES
 CACHES = {
     "default": {
+        # 'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        # 'LOCATION': os.path.join(BASE_DIR, 'cache'),
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/5",
         # "OPTIONS": {
@@ -154,4 +163,75 @@ CACHES = {
     }
 }
 
-LOGIN_URL = "login"
+
+# Celery Configuration Options
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_URL = 'redis://localhost:6379/6'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/6'
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+
+# Email
+# https://docs.djangoproject.com/en/5.0/topics/email/
+
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+
+EMAIL_HOST = 'smtp.beget.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'password-reset@kite-expert.ru'
+EMAIL_HOST_PASSWORD = 'kf&Wa08H'
+EMAIL_USE_SSL = True
+# EMAIL_USE_TSL = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER
+
+
+# DRF
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 5,
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',  # default session auth
+        'rest_framework.authentication.SessionAuthentication',  # default session auth
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+
+    'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer'],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.IsAuthenticated',
+        ],
+    }
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ['rest_framework.renderers.BrowsableAPIRenderer']
+
+
+
+
+
+
+
+
+""" The “sites” framework to change {domain} {sitename}
+https://docs.djangoproject.com/en/4.2/ref/contrib/sites/#enabling-the-sites-framework
+>>> from django.contrib.sites.models import Site
+>>> my_site = Site.objects.get(pk=1)
+>>> my_site.domain = 'somedomain.com'
+>>> my_site.name = 'Some Domain'
+>>> my_site.save()
+SITE_ID = 1
+OR
+>>> my_site = Site(domain='some_domain.com', name='Some Domain')
+>>> my_site.save()
+>>> print my_site.id
+2
+SITE_ID = 2
+"""
