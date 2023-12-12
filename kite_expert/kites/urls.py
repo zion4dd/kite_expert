@@ -1,6 +1,5 @@
-from django.urls import path, reverse_lazy
+from django.urls import path
 from django.views.decorators.cache import cache_page
-from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 
 from kites import views
 
@@ -24,10 +23,7 @@ urlpatterns = [
     path('profile/edit/', views.UserProfileEdit.as_view(), name='profiledit'),
     path('profile/', views.UserProfile.as_view(), name='profile'),
 
-    path('password/edit/', 
-         PasswordChangeView.as_view(template_name='kites/form_cycle_for.html', 
-                                    success_url = reverse_lazy('profile')), 
-         name='password_change'),
+    path('password/edit/', views.UserPasswordChange.as_view(), name='password_change'),
 
     # path('change-done/', 
     #      PasswordChangeDoneView.as_view(template_name='kites/change_done.html'), 

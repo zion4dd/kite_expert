@@ -2,7 +2,7 @@ from typing import Any, Dict, List
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import models
 from django.shortcuts import redirect
@@ -181,8 +181,15 @@ class UserProfileEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
         expert = form.save()
         resize_photo_expert.delay(expert.pk)
         return super().form_valid(form)
-    
-    
+
+
+class UserPasswordChange(LoginRequiredMixin, utils.DataMixin, PasswordChangeView):
+    form_class = forms.UserPasswordChangeForm
+    success_url = reverse_lazy('profile')
+    template_name='kites/form_cycle_for.html'
+    title_page = "Password change"
+
+
 def user_logout(request):
     logout(request)
     cache.clear()
