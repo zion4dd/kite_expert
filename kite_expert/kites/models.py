@@ -1,11 +1,12 @@
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.contrib.auth import get_user_model
+# from django.contrib.auth.models import User
 
 
 class Expert(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     about = models.TextField(blank=True)
     photo = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
     # slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
@@ -25,7 +26,7 @@ class Kite(models.Model):
     time_update = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True)
     brand = models.ForeignKey('Brand', on_delete=models.PROTECT)
-    expert = models.ForeignKey(User, on_delete=models.PROTECT)
+    expert = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
     photo1 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
     photo2 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
     photo3 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)

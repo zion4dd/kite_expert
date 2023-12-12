@@ -1,33 +1,63 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
-# from django.db.models.fields.files import ImageFieldFile
-from django.utils.text import slugify
 from django import forms
-from django.forms.widgets import ClearableFileInput
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.utils.text import slugify
+# from django.db.models.fields.files import ImageFieldFile
 
 from kites import models
 # from kite_expert.settings import MAX_IMAGE_SIZE
 
 
-class ThumbnailImageInput(ClearableFileInput):
+class ThumbnailImageInput(forms.widgets.ClearableFileInput):
     template_name = 'overrides/clearable_file_input.html'
 
 
 class UserRegisterForm(UserCreationForm):
-    username = forms.CharField(max_length=100, label='Login', widget=forms.TextInput(attrs={'class': 'form-name'}))
-    password1 = forms.CharField(max_length=100, label='Pass1', widget=forms.PasswordInput(attrs={'class': 'form-name'}))
-    password2 = forms.CharField(max_length=100, label='Pass2', widget=forms.PasswordInput(attrs={'class': 'form-name'}))
-    # email = forms.EmailField(max_length=255, label='Email', widget=forms.EmailInput(attrs={'class': 'form-name'}))
-    # first_name = forms.CharField(max_length=100, label='Nickname', widget=forms.TextInput(attrs={'class': 'form-name'}))
+    username = forms.CharField(max_length=100, label='Login', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    email = forms.EmailField(max_length=255, label='Email', widget=forms.EmailInput(attrs={'class': 'form-input'}))
+    password1 = forms.CharField(max_length=100, label='Pass1', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    password2 = forms.CharField(max_length=100, label='Pass2', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    # first_name = forms.CharField(max_length=100, label='Nickname', widget=forms.TextInput(attrs={'class': 'form-input'}))
     
     class Meta:
-        model = User
-        fields = ['username', 'password1', 'password2']
+        model = get_user_model()
+        fields = ['username', 'email', 'password1', 'password2']
+
+    def clean_email(self):
+        "проверка уникальности поля email"
+        email = self.cleaned_data['email']
+        if get_user_model().objects.filter(email=email).exists():
+            raise forms.ValidationError('Такой почтовый адрес уже существует.')
+        return email
 
 
 class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-name'}))
-    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-name'}))
+    username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+
+
+class BrandForm(forms.ModelForm):
+    def clean_name(self):
+        return self.cleaned_data["name"].upper()
+    
+    def clean_slug(self):
+        return slugify(self.cleaned_data["name"])
+
+
+class ExpertForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Expert
+        fields = ['about', 'photo']
+        widgets = {
+            'photo': ThumbnailImageInput,
+        }
+
+# для сжатия фото до сохранения на диск:
+
+#     def clean_photo(self):
+#         img = self.cleaned_data.get('photo')
+#         return resize_image(img)
 
 
 class KiteForm(forms.ModelForm):
@@ -48,6 +78,8 @@ class KiteForm(forms.ModelForm):
     def clean_slug(self):
         return slugify(self.cleaned_data['name'])
     
+# для сжатия фото до сохранения на диск:
+
     # def clean_photo1(self):
     #     img = self.cleaned_data.get('photo1')
     #     return resize_image(img)
@@ -65,29 +97,6 @@ class KiteForm(forms.ModelForm):
     #     return resize_image(img)
 
 
-class BrandForm(forms.ModelForm):
-    def clean_name(self):
-        return self.cleaned_data["name"].upper()
-    
-    def clean_slug(self):
-        return slugify(self.cleaned_data["name"])
-
-
-class ExpertForm(forms.ModelForm):
-
-    class Meta:
-        model = models.Expert
-        fields = ['about', 'photo']
-        widgets = {
-            'photo': ThumbnailImageInput,
-        }
-
-#     def clean_photo(self):
-#         img = self.cleaned_data.get('photo')
-#         return resize_image(img)
-
-
-# сжимает фото до сохранения на диск
 # def resize_image(image):
 #     from io import BytesIO
 #     from django.core.files.base import ContentFile

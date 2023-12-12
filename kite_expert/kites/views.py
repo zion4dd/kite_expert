@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -80,7 +80,7 @@ class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateV
     model = models.Kite
     form_class = forms.KiteForm
     template_name = 'kites/form_cycle_for.html'
-    title_page = 'Kite edit'
+    title_page = 'Edit kite'
 
     def test_func(self):
         return self.request.user.id == self.get_object().expert_id
@@ -118,15 +118,15 @@ class Expert(utils.DataMixin, ListView):
         return models.Expert.objects.all().select_related('user')
 
 
-class ExpertEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateView):
+class ExpertEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
     model = models.Expert
     form_class = forms.ExpertForm
     template_name = 'kites/form_cycle_for.html'
     slug_field = 'user__username'
-    title_page = 'Expert edit'
-
-    def test_func(self):
-        return self.request.user.username == self.kwargs['slug']
+    title_page = 'Edit profile'
+    
+    def get_object(self):
+        return models.Expert.objects.get(user=self.request.user.pk)
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'slug': self.request.user.username})

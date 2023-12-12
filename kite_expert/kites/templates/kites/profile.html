@@ -11,8 +11,9 @@
     </div>
     {% endif %}
 </p>
-<p>{{ object.about|linebreaks }}</p>
-<p><a href="{% url 'expertedit' object.user %}">Edit profile</a></p>
+<p>{{ object.about | linebreaks }}</p>
+<p><a href="{% url 'expertedit' %}">Edit profile</a></p>
+<p><a href="{% url 'password_change' %}">Edit password</a></p>
 
 <h1>Posts:</h1>
 
@@ -25,8 +26,8 @@
 {% endif %}
 
 <h3>{{ i.brand }} | {{ i.name }}</h3>
-<p>{{ i.time_create|date:'Y-m-d' }} | {{ i.time_update|date:'Y-m-d' }}</p>
-<p>{{ i.text|linebreaks }}</p>
+<p>{{ i.time_create | date:'Y-m-d' }} | {{ i.time_update | date:'Y-m-d' }}</p>
+<p>{{ i.text | linebreaks }}</p>
 
 <details>
     <summary>Images</summary>
@@ -36,7 +37,7 @@
 
 <p>
     <a href="{{ i.get_kiteedit_url }}">Edit</a> | 
-    <a href="{{ i.get_kitedel_url }}?next={{ request.path|urlencode }}" 
+    <a href="{{ i.get_kitedel_url }}?next={{ request.path | urlencode }}" 
     onClick="return window.confirm('Confirm?');">Delete</a>
 </p>
 
