@@ -1,9 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import (
-    UserCreationForm, 
-    AuthenticationForm, 
-    PasswordChangeForm)
+from django.contrib.auth.forms import (UserCreationForm, 
+                                       AuthenticationForm, 
+                                       PasswordChangeForm)
 from django.utils.text import slugify
 # from django.db.models.fields.files import ImageFieldFile
 

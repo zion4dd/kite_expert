@@ -5,12 +5,12 @@
 <h1>{{ title }}</h1>
 
 {% for i in object_list %}
-<p><a class="btn" href="{{ i.get_expert_url }}">{{ i.expert }}</a></p>
+<p><a class="btn" href="{{ i.get_user_url }}">{{ i.user }}</a></p>
 <p>{{ i.text|linebreaks }}</p>
 
 {% include "kites/blockimage.html" %}
 
-{% if i.expert == user %}
+{% if i.user == user %}
 <p><a href="{{ i.get_kiteedit_url }}">Edit</a></p>
 <p><a href="{{ i.get_kitedel_url }}?next={{ request.path|urlencode }}" 
     onClick="return window.confirm('Confirm?');">Delete</a></p>

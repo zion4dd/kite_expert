@@ -58,7 +58,7 @@ class Kite(utils.DataMixin, ListView):
         return models.Kite.objects.filter(slug=self.kwargs['slug'], 
                                           is_published=True)\
                                   .order_by('time_create')\
-                                  .select_related('expert')
+                                  .select_related('user')
 
 
 class KiteAdd(LoginRequiredMixin, utils.DataMixin, CreateView):
@@ -67,13 +67,13 @@ class KiteAdd(LoginRequiredMixin, utils.DataMixin, CreateView):
     title_page = 'Add kite'
     
     def form_valid(self, form):
-        form.instance.expert = self.request.user
+        form.instance.user = self.request.user
         kite = form.save()
         resize_photo_kite.delay(kite.pk)
         cache.clear()
         return super().form_valid(form)
         # auto redirect to get_absolute_url in models.Kite
-        # return redirect(reverse_lazy('kite', kwargs={'slug': form.instance.slug}))
+        # return redirect(reverse_lazy('kites:kite', kwargs={'slug': form.instance.slug}))
 
 
 class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateView):
@@ -83,13 +83,13 @@ class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateV
     title_page = 'Edit kite'
 
     def test_func(self):
-        return self.request.user.id == self.get_object().expert_id
+        return self.request.user.id == self.get_object().user_id
     
     def get_success_url(self):
         # cache.clear()  # если не ипользуется метод form_valid (без celery)
         if self.object.is_published:
-            return reverse_lazy('kite', kwargs={'slug': self.object.slug})
-        return reverse_lazy('profile') + '#' + self.object.slug
+            return reverse_lazy('kites:kite', kwargs={'slug': self.object.slug})
+        return reverse_lazy('kites:profile') + '#' + self.object.slug
     
     def form_valid(self, form):
         kite = form.save()
@@ -101,11 +101,11 @@ class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateV
 @login_required
 def kite_del(request, id):
     kite = models.Kite.objects.get(pk=id)
-    if request.user.id == kite.expert_id:
+    if request.user.id == kite.user_id:
         kite.delete()
         cache.clear()
-    return redirect('home')
-    # return redirect(request.GET.get('next', 'home'))
+    return redirect('kites:home')
+    # return redirect(request.GET.get('next', 'kites:home'))
 
     
 class Expert(utils.DataMixin, ListView):
@@ -122,7 +122,7 @@ class Expert(utils.DataMixin, ListView):
 class UserRegister(utils.DataMixin, CreateView):
     form_class = forms.UserRegisterForm
     template_name = 'kites/form_cycle_for.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('kites:login')
     title_page = 'Register'
     
     def form_valid(self, form):
@@ -144,7 +144,7 @@ class UserLogin(utils.DataMixin, LoginView):
     
     def get_success_url(self):
         cache.clear()
-        return reverse_lazy('profile')
+        return reverse_lazy('kites:profile')
 
 
 class UserProfile(LoginRequiredMixin, utils.DataMixin, DetailView):
@@ -159,8 +159,8 @@ class UserProfile(LoginRequiredMixin, utils.DataMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(expert_kites=models.Kite.objects\
-                                            .filter(expert=self.request.user.id)\
+        context.update(user_kites=models.Kite.objects\
+                                            .filter(user=self.request.user.id)\
                                             .order_by('is_published', 'brand')\
                                             .select_related('brand'))
         return context
@@ -177,7 +177,7 @@ class UserProfileEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
         return models.Expert.objects.get(user=self.request.user.pk)
 
     def get_success_url(self):
-        return reverse_lazy('profile')
+        return reverse_lazy('kites:profile')
 
     def form_valid(self, form):
         expert = form.save()
@@ -187,7 +187,7 @@ class UserProfileEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
 
 class UserPasswordChange(LoginRequiredMixin, utils.DataMixin, PasswordChangeView):
     form_class = forms.UserPasswordChangeForm
-    success_url = reverse_lazy('profile')
+    success_url = reverse_lazy('kites:profile')
     template_name='kites/form_cycle_for.html'
     title_page = "Password change"
 
@@ -195,5 +195,5 @@ class UserPasswordChange(LoginRequiredMixin, utils.DataMixin, PasswordChangeView
 def user_logout(request):
     logout(request)
     cache.clear()
-    return redirect('home')
+    return redirect('kites:home')
 

@@ -15,27 +15,27 @@
     <div class="head">
         <div class="head__left">
             <p>
-                <a href="{% url 'home' %}">Kites</a> | 
-                <a href="{% url 'experts' %}">Experts</a>
+                <a href="{% url 'kites:home' %}">Kites</a> | 
+                <a href="{% url 'kites:experts' %}">Experts</a>
             </p>
         </div>
         <div class="head__right">
             {% if user.is_authenticated %}
             <p>
-                    <a href="{% url 'logout' %}">Logout</a>
+                    <a href="{% url 'kites:logout' %}">Logout</a>
                 </p>
                 {% else %}
                 <p>
-                    <!-- <a href="{% url 'register' %}">Register</a> |  -->
-                    <a href="{% url 'login' %}">Login</a>
+                    <!-- <a href="{% url 'kites:register' %}">Register</a> |  -->
+                    <a href="{% url 'kites:login' %}">Login</a>
                 </p>
                 {% endif %}
         </div>
         <div class="head__user">
             {% if user.is_authenticated %}
             <p>
-                <a href="{% url 'kiteadd' %}">Add kite</a> | 
-                <a href="{% url 'profile' %}">{{ user }}</a>
+                <a href="{% url 'kites:kiteadd' %}">Add kite</a> | 
+                <a href="{% url 'kites:profile' %}">{{ user }}</a>
             </p>
             {% endif %}
         </div>

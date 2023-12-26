@@ -10,11 +10,11 @@ from kites import forms
 @admin.register(models.Kite)
 class KiteAdmin(admin.ModelAdmin):
     form = forms.KiteForm
-    list_display = ('id', 'brand', 'name', 'slug', 'time_update', 'is_published', 'expert', 'photos')
+    list_display = ('id', 'brand', 'name', 'slug', 'time_update', 'is_published', 'user', 'photos')
     list_display_links = ('id', 'name')
     list_editable = ('is_published',)
-    list_filter = ('is_published', 'time_create', 'expert')
-    fields = ('brand', 'name', 'text', 'is_published', 'expert', 'photo1', 'photo2', 'photo3', 'photo4')
+    list_filter = ('is_published', 'time_create', 'user')
+    fields = ('brand', 'name', 'text', 'is_published', 'user', 'photo1', 'photo2', 'photo3', 'photo4')
     ordering = ( 'brand', 'name')
     list_per_page = 10
     readonly_fields = ('photos', )

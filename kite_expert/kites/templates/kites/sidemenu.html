@@ -1,6 +1,6 @@
 <ul>
     <li>
-        <a href="{% url 'home' %}">ALL</a>
+        <a href="{% url 'kites:home' %}">ALL</a>
     </li>
     {% for i in brands %}
     {% if i.kite__count > 0 %}

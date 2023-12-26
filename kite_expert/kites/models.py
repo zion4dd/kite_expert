@@ -15,7 +15,7 @@ class Expert(models.Model):
         return self.user.username
     
     def get_absolute_url(self):
-        return reverse('expert', kwargs={'slug': self.user})
+        return reverse('kites:expert', kwargs={'slug': self.user})
 
 
 class Kite(models.Model):
@@ -26,7 +26,7 @@ class Kite(models.Model):
     time_update = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True)
     brand = models.ForeignKey('Brand', on_delete=models.PROTECT)
-    expert = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
+    user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
     photo1 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
     photo2 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
     photo3 = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
@@ -36,16 +36,16 @@ class Kite(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse('kite', kwargs={'slug': self.slug})
+        return reverse('kites:kite', kwargs={'slug': self.slug})
     
     def get_kiteedit_url(self):
-        return reverse('kiteedit', kwargs={'pk': self.pk})
+        return reverse('kites:kitedit', kwargs={'pk': self.pk})
     
     def get_kitedel_url(self):
-        return reverse('kitedel', kwargs={'id': self.pk})
+        return reverse('kites:kitedel', kwargs={'id': self.pk})
 
-    def get_expert_url(self):
-        return reverse('expert', kwargs={'slug': self.expert})
+    def get_user_url(self):
+        return reverse('kites:expert', kwargs={'slug': self.user})
     
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -63,7 +63,7 @@ class Brand(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse('brand', kwargs={'slug': self.slug})
+        return reverse('kites:brand', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
         if not self.slug:

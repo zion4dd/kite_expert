@@ -17,12 +17,12 @@
     {% endif %}
 </p>
 <p>{{ object.about | linebreaks }}</p>
-<p><a href="{% url 'profiledit' %}">Edit profile</a></p>
-<p><a href="{% url 'password_change' %}">Edit password</a></p>
+<p><a href="{% url 'kites:profiledit' %}">Edit profile</a></p>
+<p><a href="{% url 'kites:password_change' %}">Edit password</a></p>
 
 <h1>Posts:</h1>
 
-{% for i in expert_kites %}
+{% for i in user_kites %}
 
 <div id="{{ i.slug }}" class="anchor"></div>
 

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, reverse_lazy
 from django.views.decorators.cache import cache_page
 from django.contrib.auth.views import (PasswordResetView, 
                                        PasswordResetDoneView, 
@@ -16,7 +16,7 @@ urlpatterns = [
     path('expert/', cache_page(60)(views.Expert.as_view()), name='experts'),
 
     path('kite/add/', views.KiteAdd.as_view(), name='kiteadd'),
-    path('kite/edit/<int:pk>/', views.KiteEdit.as_view(), name='kiteedit'),
+    path('kite/edit/<int:pk>/', views.KiteEdit.as_view(), name='kitedit'),
     path('kite/del/<int:id>', views.kite_del, name='kitedel'),
     path('kite/<slug:slug>/', cache_page(60)(views.Kite.as_view()), name='kite'),
 
@@ -31,21 +31,30 @@ urlpatterns = [
 
     path('password/reset/done/', 
          PasswordResetDoneView.as_view(template_name='overrides/password_reset_done.html'), 
-         name="password_reset_done"),
+         name="password_reset_done"
+         ),
 
     path('password/reset/<uidb64>/<token>/', 
-         PasswordResetConfirmView.as_view(template_name='kites/form_cycle_for.html'), 
-         name='password_reset_confirm'),
+         PasswordResetConfirmView.as_view(
+             template_name='kites/form_cycle_for.html', 
+             success_url=reverse_lazy("kites:password_reset_complete"),
+             ), 
+         name='password_reset_confirm'
+         ),
     
     path('password/reset/complete/', 
          PasswordResetCompleteView.as_view(template_name='overrides/password_reset_complete.html'), 
-         name='password_reset_complete'),
+         name='password_reset_complete'
+         ),
     
     path('password/reset/', 
-         PasswordResetView.as_view(template_name='kites/form_cycle_for.html',
-                                   email_template_name = "overrides/password_reset_email.html",
-                                   subject_template_name = "overrides/password_reset_subject.txt",
-                                   ), 
-         name='password_reset'),
+         PasswordResetView.as_view(
+             template_name='kites/form_cycle_for.html', 
+             email_template_name="overrides/password_reset_email.html",
+             subject_template_name="overrides/password_reset_subject.txt",
+             success_url=reverse_lazy("kites:password_reset_done"),
+             ), 
+         name='password_reset'
+         ),
          
 ]

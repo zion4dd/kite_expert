@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,14 +25,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j@j+lhq(py53277eo2no9!=b)!^5c(0#+))_dtoh5z08j0#p0v'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.getenv('DEBUG'))
 
-USER_IS_ACTIVE = True ### user register set field 'is_active'
+USER_IS_ACTIVE = bool(os.getenv('USER_IS_ACTIVE')) ### user register set field 'is_active'
 
-MAX_IMAGE_SIZE = 1200 ###
+MAX_IMAGE_SIZE = int(os.getenv('MAX_IMAGE_SIZE')) ###
 
 ALLOWED_HOSTS = ['localhost', 'kite-expert.ru', 'www.kite-expert.ru']
 
@@ -50,6 +54,8 @@ INSTALLED_APPS = [
     "debug_toolbar", ###
     "djcelery_email", ###
     "rest_framework", ###
+    "rest_framework.authtoken", ###
+    "djoser", ###
 ]
 
 MIDDLEWARE = [
@@ -148,7 +154,7 @@ MEDIA_URL = '/media/'
 # if settings.DEBUG:
 #   urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# CASHES
+# CASH options
 CACHES = {
     "default": {
         # 'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
@@ -184,7 +190,7 @@ EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 EMAIL_HOST = 'smtp.beget.com'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'password-reset@kite-expert.ru'
-EMAIL_HOST_PASSWORD = 'kf&Wa08H'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_SSL = True
 # EMAIL_USE_TSL = True
 
@@ -197,13 +203,11 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 5,
-
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',  # default session auth
         'rest_framework.authentication.SessionAuthentication',  # default session auth
         'rest_framework.authentication.TokenAuthentication',
     ],
-
     'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer'],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
@@ -213,7 +217,11 @@ REST_FRAMEWORK = {
 if DEBUG:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ['rest_framework.renderers.BrowsableAPIRenderer']
 
-
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'kites.serializers.MyUserCreateSerializer',
+    },
+}
 
 
 

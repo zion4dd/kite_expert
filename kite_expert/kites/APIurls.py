@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework import routers
 from kites.APIviews import KiteSet, Brand, BrandList, ExpertSet
 
@@ -20,4 +20,6 @@ urlpatterns = [
     path('', include(brand_router.urls)),
     path('', include(expert_router.urls)),
 
+    re_path(r'^auth/', include('djoser.urls')),  # auth/login
+    re_path(r'^auth/', include('djoser.urls.authtoken')),  # auth/token/login
 ]
