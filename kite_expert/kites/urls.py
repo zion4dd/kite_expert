@@ -30,15 +30,17 @@ urlpatterns = [
     path('password/edit/', views.UserPasswordChange.as_view(), name='password_change'),
 
     path('password/reset/done/', 
-         PasswordResetDoneView.as_view(template_name='overrides/password_reset_done.html'), 
+         PasswordResetDoneView.as_view(
+             template_name='overrides/password_reset_done.html'
+             ), 
          name="password_reset_done"
          ),
 
     path('password/reset/<uidb64>/<token>/', 
          PasswordResetConfirmView.as_view(
-             template_name='kites/form_cycle_for.html', 
+             template_name='kites/form_cycle_for.html',
              success_url=reverse_lazy("kites:password_reset_complete"),
-             ), 
+         ),
          name='password_reset_confirm'
          ),
     

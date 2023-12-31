@@ -5,10 +5,11 @@
 dbstore/
 imgs/
 photos/
+*.bat
 #
 
 .idea/
-log/
+# log/
 
 #docker-compose.yaml
 #resources/products.json

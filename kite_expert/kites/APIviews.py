@@ -6,6 +6,12 @@ from kites import models
 from .serializers import KiteSerializer, ExpertSerializer, BrandSerializer
 from .permissions import IsOwnerOrReadOnly
 
+import logging
+
+
+logger = logging.getLogger('test')
+# logger.warning("Warning TEST message")  # [debug|info|warning|error|critical]
+
 
 class KiteSet(viewsets.ModelViewSet):
     queryset = models.Kite.objects.all()

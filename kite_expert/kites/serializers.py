@@ -25,7 +25,7 @@ class ExpertSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Expert
         fields = '__all__'
-        fields = ('id', 'user', 'about', 'photo', 'user_id')
+        fields = ('id', 'about', 'photo', 'user_id', 'user')
 
 
 class BrandSerializer(serializers.ModelSerializer):
@@ -34,7 +34,8 @@ class BrandSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class MyUserCreateSerializer(UserCreateSerializer):
+class IsActiveUserCreateSerializer(UserCreateSerializer):
+    "https://www.django-rest-framework.org/api-guide/validators/#advanced-field-defaults"
     is_active = serializers.HiddenField(default=USER_IS_ACTIVE)
 
     class Meta:
