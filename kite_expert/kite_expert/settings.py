@@ -15,11 +15,9 @@ import os
 from dotenv import load_dotenv
 
 
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv(dotenv_path=BASE_DIR.parent)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -28,11 +26,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv('DEBUG'))
+DEBUG = os.getenv('DEBUG') == 'true'
 
-USER_IS_ACTIVE = bool(os.getenv('USER_IS_ACTIVE')) ### user register set field 'is_active'
+USER_IS_ACTIVE = os.getenv('USER_IS_ACTIVE') == 'true' ### user register set field 'is_active'
 
-MAX_IMAGE_SIZE = int(os.getenv('MAX_IMAGE_SIZE', default=1200)) ###
+MAX_IMAGE_SIZE = int(os.getenv('MAX_IMAGE_SIZE', 1200)) ###
 
 ALLOWED_HOSTS = ['localhost', 'kite-expert.ru', 'www.kite-expert.ru']
 
@@ -51,11 +49,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     "kites.apps.KitesConfig", ###
-    "debug_toolbar", ###
-    "djcelery_email", ###
-    "rest_framework", ###
+    "debug_toolbar", ### https://pypi.org/project/django-debug-toolbar/
+    "djcelery_email", ### https://pypi.org/project/django-celery-email/
+    "rest_framework", ### https://www.django-rest-framework.org/
     "rest_framework.authtoken", ###
-    "djoser", ###
+    "djoser", ### https://djoser.readthedocs.io/en/latest/settings.html
+    "drf_yasg", ### https://drf-yasg.readthedocs.io/en/stable/readme.html
 ]
 
 MIDDLEWARE = [
