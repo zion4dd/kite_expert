@@ -16,60 +16,63 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path, re_path
+from django.urls import include, path  # re_path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
-from rest_framework import permissions 
-from drf_yasg.views import get_schema_view  
-from drf_yasg import openapi  
-  
 from kite_expert import settings
 
 # drf_yasg
 schema_view = get_schema_view(
-   openapi.Info(
-      title="kite-expert.ru API",
-      default_version='v1',
-      description="",
-      terms_of_service="",
-      contact=openapi.Contact(email=""),
-      license=openapi.License(name=""),
-   ),
-   public=True,
-   permission_classes=(permissions.AllowAny,),
+    openapi.Info(
+        title="kite-expert.ru API",
+        default_version="v1",
+        description="",
+        terms_of_service="",
+        contact=openapi.Contact(email=""),
+        license=openapi.License(name=""),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include(('kites.urls', 'kites'), namespace='kites')),
-    path('api/', include('kites.APIurls')),
+    path("admin/", admin.site.urls),
+    path("", include(("kites.urls", "kites"), namespace="kites")),
+    path("api/", include("kites.APIurls")),
     path("__debug__/", include("debug_toolbar.urls")),
-    
     # drf_yasg
-    path('apidoc/swagger<format>/', 
-         schema_view.without_ui(cache_timeout=0), 
-         name='schema-json'),
-    path('apidoc/swagger/', 
-         schema_view.with_ui('swagger', cache_timeout=0), 
-         name='schema-swagger-ui'),
-    path('apidoc/redoc/', 
-         schema_view.with_ui('redoc', cache_timeout=0), 
-         name='schema-redoc'),
-
-    # re_path(  
-    #     r"^swagger(?P<format>\.json|\.yaml)$",  
-    #     schema_view.without_ui(cache_timeout=0),  
-    #     name="schema-json",  
-    # ),  
-    # re_path(  
-    #     r"^swagger/$",  
-    #     schema_view.with_ui("swagger", cache_timeout=0),  
-    #     name="schema-swagger-ui",  
-    # ),  
-    # re_path(  
-    #     r"^redoc/$", 
-    #     schema_view.with_ui("redoc", cache_timeout=0), 
-    #     name="schema-redoc"  
-    # ),  
+    path(
+        "apidoc/swagger<format>/",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
+    ),
+    path(
+        "apidoc/swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path(
+        "apidoc/redoc/",
+        schema_view.with_ui("redoc", cache_timeout=0),
+        name="schema-redoc",
+    ),
+    # re_path(
+    #     r"^swagger(?P<format>\.json|\.yaml)$",
+    #     schema_view.without_ui(cache_timeout=0),
+    #     name="schema-json",
+    # ),
+    # re_path(
+    #     r"^swagger/$",
+    #     schema_view.with_ui("swagger", cache_timeout=0),
+    #     name="schema-swagger-ui",
+    # ),
+    # re_path(
+    #     r"^redoc/$",
+    #     schema_view.with_ui("redoc", cache_timeout=0),
+    #     name="schema-redoc"
+    # ),
 ]
 
 if settings.DEBUG:

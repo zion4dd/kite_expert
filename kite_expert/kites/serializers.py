@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
 from djoser.serializers import UserCreateSerializer
+from rest_framework import serializers
 
 from kite_expert.settings import USER_IS_ACTIVE
+
 from . import models
 
 
@@ -15,8 +16,21 @@ class KiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Kite
         # fields = '__all__'
-        fields = ('id', 'name', 'text', 'time_create', 'time_update', 'is_published', 
-                  'brand', 'photo1', 'photo2', 'photo3', 'photo4', 'user', 'user_id')
+        fields = (
+            "id",
+            "name",
+            "text",
+            "time_create",
+            "time_update",
+            "is_published",
+            "brand",
+            "photo1",
+            "photo2",
+            "photo3",
+            "photo4",
+            "user",
+            "user_id",
+        )
 
 
 class ExpertSerializer(serializers.ModelSerializer):
@@ -24,20 +38,21 @@ class ExpertSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Expert
-        fields = '__all__'
-        fields = ('id', 'about', 'photo', 'user_id', 'user')
+        fields = "__all__"
+        fields = ("id", "about", "photo", "user_id", "user")
 
 
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Brand
-        fields = '__all__'
+        fields = "__all__"
 
 
 class IsActiveUserCreateSerializer(UserCreateSerializer):
     "https://www.django-rest-framework.org/api-guide/validators/#advanced-field-defaults"
+
     is_active = serializers.HiddenField(default=USER_IS_ACTIVE)
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'username', 'password', 'email', 'is_active')
+        fields = ("id", "username", "password", "email", "is_active")

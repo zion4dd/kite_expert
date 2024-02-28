@@ -1,13 +1,14 @@
 # RUN: celery -A kite_expert worker --loglevel=info --pool=solo
 # RUN: celery -A kite_expert flower # URL: localhost:5555
 
-from celery import Celery
 import os
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kite_expert.settings')
+from celery import Celery
 
-celery_app = Celery('celery_tasks')
-celery_app.config_from_object('django.conf:settings', namespace='CELERY')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "kite_expert.settings")
+
+celery_app = Celery("celery_tasks")
+celery_app.config_from_object("django.conf:settings", namespace="CELERY")
 celery_app.autodiscover_tasks()
 
 
@@ -28,5 +29,5 @@ celery_app.autodiscover_tasks()
 #         'args': (16, 16),
 #     },
 # }
-# 
+#
 # RUN: celery -A kite_expert beat -l info OR celery -A kite_expert worker -B -l info

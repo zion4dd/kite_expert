@@ -10,10 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
 import os
-from dotenv import load_dotenv
+from pathlib import Path
 
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,79 +23,81 @@ load_dotenv(dotenv_path=BASE_DIR.parent)
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG') == 'true'
+DEBUG = os.getenv("DEBUG") == "true"
 
-USER_IS_ACTIVE = os.getenv('USER_IS_ACTIVE') == 'true' ### user register set field 'is_active'
+USER_IS_ACTIVE = (
+    os.getenv("USER_IS_ACTIVE") == "true"
+)  ### user register set field 'is_active'
 
-MAX_IMAGE_SIZE = int(os.getenv('MAX_IMAGE_SIZE', 1200)) ###
+MAX_IMAGE_SIZE = int(os.getenv("MAX_IMAGE_SIZE", 1200))  ###
 
-ALLOWED_HOSTS = ['localhost', 'kite-expert.ru', 'www.kite-expert.ru']
+ALLOWED_HOSTS = ["localhost", "kite-expert.ru", "www.kite-expert.ru"]
 
-INTERNAL_IPS = ['127.0.0.1']
+INTERNAL_IPS = ["127.0.0.1"]
 
-CSRF_TRUSTED_ORIGINS = ['https://*.kite-expert.ru', 'https://*.127.0.0.1'] ###
+CSRF_TRUSTED_ORIGINS = ["https://*.kite-expert.ru", "https://*.127.0.0.1"]  ###
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_extensions',
-    "kites.apps.KitesConfig", ###
-    "debug_toolbar", ### https://pypi.org/project/django-debug-toolbar/
-    "djcelery_email", ### https://pypi.org/project/django-celery-email/
-    "rest_framework", ### https://www.django-rest-framework.org/
-    "rest_framework.authtoken", ###
-    "djoser", ### https://djoser.readthedocs.io/en/latest/settings.html
-    "drf_yasg", ### https://drf-yasg.readthedocs.io/en/stable/readme.html
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django_extensions",
+    "kites.apps.KitesConfig",  ###
+    "debug_toolbar",  ### https://pypi.org/project/django-debug-toolbar/
+    "djcelery_email",  ### https://pypi.org/project/django-celery-email/
+    "rest_framework",  ### https://www.django-rest-framework.org/
+    "rest_framework.authtoken",  ###
+    "djoser",  ### https://djoser.readthedocs.io/en/latest/settings.html
+    "drf_yasg",  ### https://drf-yasg.readthedocs.io/en/stable/readme.html
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "debug_toolbar.middleware.DebugToolbarMiddleware" ###
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",  ###
 ]
 
-ROOT_URLCONF = 'kite_expert.urls'
+ROOT_URLCONF = "kite_expert.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'kite_expert.wsgi.application'
+WSGI_APPLICATION = "kite_expert.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -105,16 +107,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -122,9 +124,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'ru' #'en-us'
+LANGUAGE_CODE = "ru"  #'en-us'
 
-TIME_ZONE = 'Europe/Moscow' #'UTC'
+TIME_ZONE = "Europe/Moscow"  #'UTC'
 
 USE_I18N = True
 
@@ -134,21 +136,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 ###
 LOGIN_URL = "login"
-PROFILE_IMAGE = 'kites/images/profile.png'
+PROFILE_IMAGE = "kites/images/profile.png"
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') # общая папка
+STATIC_ROOT = os.path.join(BASE_DIR, "static")  # общая папка
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 # в kite_expert/urls.py добавить путь для режима Debug:
 # if settings.DEBUG:
 #   urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -171,12 +173,12 @@ CACHES = {
 
 # Celery Configuration Options
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_BROKER_URL = 'redis://localhost:6379/6'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/6'
-CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BROKER_URL = "redis://localhost:6379/6"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/6"
+CELERY_BROKER_TRANSPORT_OPTIONS = {"visibility_timeout": 3600}
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 
 
 # Email
@@ -184,12 +186,12 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
 
-EMAIL_HOST = 'smtp.beget.com'
+EMAIL_HOST = "smtp.beget.com"
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'password-reset@kite-expert.ru'
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = "password-reset@kite-expert.ru"
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_SSL = True
 # EMAIL_USE_TSL = True
 
@@ -200,26 +202,28 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 
 # DRF
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 5,
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',  # default session auth
-        'rest_framework.authentication.SessionAuthentication',  # default session auth
-        'rest_framework.authentication.TokenAuthentication',
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 5,
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",  # default session auth
+        "rest_framework.authentication.SessionAuthentication",  # default session auth
+        "rest_framework.authentication.TokenAuthentication",
     ],
-    'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer'],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
         # 'rest_framework.permissions.IsAuthenticated',
-        ],
-    }
+    ],
+}
 if DEBUG:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ['rest_framework.renderers.BrowsableAPIRenderer']
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] += [
+        "rest_framework.renderers.BrowsableAPIRenderer"
+    ]
 
 DJOSER = {
     # https://djoser.readthedocs.io/en/latest/settings.html#serializers
-    'SERIALIZERS': {
-        'user_create': 'kites.serializers.IsActiveUserCreateSerializer',
+    "SERIALIZERS": {
+        "user_create": "kites.serializers.IsActiveUserCreateSerializer",
     },
 }
 
@@ -245,15 +249,15 @@ LOGGING = {
         "file_debug": {
             # "level": "WARNING",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(BASE_DIR, 'log/debug.log'),
+            "filename": os.path.join(BASE_DIR, "log/debug.log"),
             "formatter": "simple",
-            "maxBytes": 1024 * 1024, # 1MB
+            "maxBytes": 1024 * 1024,  # 1MB
             "backupCount": 10,
         },
         "file_test": {
             # "level": "WARNING",
             "class": "logging.FileHandler",
-            "filename": os.path.join(BASE_DIR, 'log/test.log'),
+            "filename": os.path.join(BASE_DIR, "log/test.log"),
             "formatter": "simple",
         },
     },
@@ -270,10 +274,6 @@ LOGGING = {
         },
     },
 }
-
-
-
-
 
 
 """ The “sites” framework to change {domain} {sitename}

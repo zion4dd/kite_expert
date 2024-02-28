@@ -1,71 +1,75 @@
-from typing import Any, Dict, List
+from typing import Dict, List
 
-from django.contrib.auth import login, logout
+from django.contrib.auth import logout  # login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.db import models
-from django.shortcuts import redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from django.urls import reverse_lazy
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.core.cache import cache
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
-from kites import models
-from kites import utils
-from kites import forms
-from .tasks import resize_photo_kite, resize_photo_expert
+from kite_expert.settings import PROFILE_IMAGE, USER_IS_ACTIVE
+from kites import forms, models, utils
 
-from kite_expert.settings import USER_IS_ACTIVE, PROFILE_IMAGE
+from .tasks import resize_photo_expert, resize_photo_kite
 
 
 class Index(utils.DataMixin, ListView):
-    template_name = 'kites/index.html'
-    title_page = 'All kites'
+    template_name = "kites/index.html"
+    title_page = "All kites"
 
     def get_queryset(self):
-        return models.Kite.objects.values('name', 'slug')\
-                                  .filter(is_published=True)\
-                                  .distinct()
+        return (
+            models.Kite.objects.values("name", "slug")
+            .filter(is_published=True)
+            .distinct()
+        )
 
 
 class Brand(utils.DataMixin, ListView):
-    template_name = 'kites/index.html'
+    template_name = "kites/index.html"
     allow_empty = False
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(title=context['object_list'][0]['brand__name'])
+        context.update(title=context["object_list"][0]["brand__name"])
         return context
 
     def get_queryset(self) -> Dict:
-        slug = self.kwargs['slug']
-        return models.Kite.objects.values('name', 'brand__name', 'slug')\
-                                  .filter(brand__slug=slug, is_published=True)\
-                                  .distinct()
-    
+        slug = self.kwargs["slug"]
+        return (
+            models.Kite.objects.values("name", "brand__name", "slug")
+            .filter(brand__slug=slug, is_published=True)
+            .distinct()
+        )
+
 
 class Kite(utils.DataMixin, ListView):
-    template_name = 'kites/kite.html'
+    template_name = "kites/kite.html"
     allow_empty = False
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(title=context['object_list'][0].name, 
-                       brand=context['object_list'][0].brand.name)
+        context.update(
+            title=context["object_list"][0].name,
+            brand=context["object_list"][0].brand.name,
+        )
         return context
 
     def get_queryset(self) -> List[models.Kite]:
-        return models.Kite.objects.filter(slug=self.kwargs['slug'], 
-                                          is_published=True)\
-                                  .order_by('time_create')\
-                                  .select_related('user')
+        return (
+            models.Kite.objects.filter(slug=self.kwargs["slug"], is_published=True)
+            .order_by("time_create")
+            .select_related("user")
+        )
 
 
 class KiteAdd(LoginRequiredMixin, utils.DataMixin, CreateView):
     form_class = forms.KiteForm
-    template_name = 'kites/form_cycle_for.html'
-    title_page = 'Add kite'
-    
+    template_name = "kites/form_cycle_for.html"
+    title_page = "Add kite"
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         kite = form.save()
@@ -79,18 +83,18 @@ class KiteAdd(LoginRequiredMixin, utils.DataMixin, CreateView):
 class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateView):
     model = models.Kite
     form_class = forms.KiteForm
-    template_name = 'kites/form_cycle_for.html'
-    title_page = 'Edit kite'
+    template_name = "kites/form_cycle_for.html"
+    title_page = "Edit kite"
 
     def test_func(self):
         return self.request.user.id == self.get_object().user_id
-    
+
     def get_success_url(self):
         # cache.clear()  # если не ипользуется метод form_valid (без celery)
         if self.object.is_published:
-            return reverse_lazy('kites:kite', kwargs={'slug': self.object.slug})
-        return reverse_lazy('kites:profile') + '#' + self.object.slug
-    
+            return reverse_lazy("kites:kite", kwargs={"slug": self.object.slug})
+        return reverse_lazy("kites:profile") + "#" + self.object.slug
+
     def form_valid(self, form):
         kite = form.save()
         resize_photo_kite.delay(kite.pk)
@@ -104,80 +108,81 @@ def kite_del(request, id):
     if request.user.id == kite.user_id:
         kite.delete()
         cache.clear()
-    return redirect('kites:home')
+    return redirect("kites:home")
     # return redirect(request.GET.get('next', 'kites:home'))
 
-    
+
 class Expert(utils.DataMixin, ListView):
-    template_name = 'kites/expert.html'
-    title_page = 'Experts'
-    extra_context = {'profile_image': PROFILE_IMAGE}
+    template_name = "kites/expert.html"
+    title_page = "Experts"
+    extra_context = {"profile_image": PROFILE_IMAGE}
 
     def get_queryset(self):
-        if self.kwargs.get('slug'):
-            return models.Expert.objects.filter(user__username=self.kwargs['slug'])
-        return models.Expert.objects.all().select_related('user')
+        if self.kwargs.get("slug"):
+            return models.Expert.objects.filter(user__username=self.kwargs["slug"])
+        return models.Expert.objects.all().select_related("user")
 
 
 class UserRegister(utils.DataMixin, CreateView):
     form_class = forms.UserRegisterForm
-    template_name = 'kites/form_cycle_for.html'
-    success_url = reverse_lazy('kites:login')
-    title_page = 'Register'
-    
+    template_name = "kites/form_cycle_for.html"
+    success_url = reverse_lazy("kites:login")
+    title_page = "Register"
+
     def form_valid(self, form):
-        'метод вызывается при успешной отправке формы'
+        "метод вызывается при успешной отправке формы"
         if USER_IS_ACTIVE:
             user = form.save()
             # login(self.request, user) # автологин
-        else: # деактивация пользователя
+        else:  # деактивация пользователя
             form.instance.is_active = False
             user = form.save()
-        models.Expert.objects.create(user=user) # создание эксперта для юзера
+        models.Expert.objects.create(user=user)  # создание эксперта для юзера
         return super().form_valid(form)
-    
+
 
 class UserLogin(utils.DataMixin, LoginView):
     form_class = forms.UserLoginForm
-    template_name = 'kites/login.html'
-    title_page = 'Login'
-    
+    template_name = "kites/login.html"
+    title_page = "Login"
+
     def get_success_url(self):
         cache.clear()
-        return reverse_lazy('kites:profile')
+        return reverse_lazy("kites:profile")
 
 
 class UserProfile(LoginRequiredMixin, utils.DataMixin, DetailView):
     # model = models.Expert  # замена на queryset
-    queryset = models.Expert.objects.select_related('user')
-    template_name = 'kites/profile.html'
-    title_page = 'Profile'
-    extra_context = {'profile_image': PROFILE_IMAGE}
+    queryset = models.Expert.objects.select_related("user")
+    template_name = "kites/profile.html"
+    title_page = "Profile"
+    extra_context = {"profile_image": PROFILE_IMAGE}
 
     def get_object(self):
         return models.Expert.objects.get(user=self.request.user.pk)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(user_kites=models.Kite.objects\
-                                            .filter(user=self.request.user.id)\
-                                            .order_by('is_published', 'brand')\
-                                            .select_related('brand'))
+        context.update(
+            user_kites=models.Kite.objects.filter(user=self.request.user.id)
+            .order_by("is_published", "brand")
+            .select_related("brand")
+        )
         return context
 
 
 class UserProfileEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
     model = models.Expert
     form_class = forms.ExpertForm
-    template_name = 'kites/form_cycle_for.html'
-    slug_field = 'user__username'
-    title_page = 'Edit profile'
-    
+    template_name = "kites/form_cycle_for.html"
+    slug_field = "user__username"
+    title_page = "Edit profile"
+
     def get_object(self):
         return models.Expert.objects.get(user=self.request.user.pk)
 
     def get_success_url(self):
-        return reverse_lazy('kites:profile')
+        return reverse_lazy("kites:profile")
 
     def form_valid(self, form):
         expert = form.save()
@@ -187,13 +192,12 @@ class UserProfileEdit(LoginRequiredMixin, utils.DataMixin, UpdateView):
 
 class UserPasswordChange(LoginRequiredMixin, utils.DataMixin, PasswordChangeView):
     form_class = forms.UserPasswordChangeForm
-    success_url = reverse_lazy('kites:profile')
-    template_name='kites/form_cycle_for.html'
+    success_url = reverse_lazy("kites:profile")
+    template_name = "kites/form_cycle_for.html"
     title_page = "Password change"
 
 
 def user_logout(request):
     logout(request)
     cache.clear()
-    return redirect('kites:home')
-
+    return redirect("kites:home")

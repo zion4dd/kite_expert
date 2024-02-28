@@ -1,9 +1,11 @@
 import os
+
 from celery import shared_task
 from PIL import Image
 
-from .models import Kite, Expert
 from kite_expert.settings import MAX_IMAGE_SIZE
+
+from .models import Expert, Kite
 
 
 @shared_task
@@ -22,22 +24,21 @@ def resize_photo_expert(pk):
 
 
 def resize_image(photo_object):
-    img_path = os.path.join('media', photo_object.name)
+    img_path = os.path.join("media", photo_object.name)
     try:
         im = Image.open(img_path)
-        print('file loaded: %s' % img_path)
-    except:
+        print("file loaded: %s" % img_path)
+    except Exception:
         return
 
     max_size = MAX_IMAGE_SIZE
     w, h = im.size
     cut = abs(w - h) // 2
-    if w >= h: 
+    if w >= h:
         box = (cut, 0, w - cut, h)
-    else: 
+    else:
         box = (0, cut, w, h - cut)
     im = im.crop(box=box)
     if im.width > max_size:
         im = im.resize(size=(max_size, max_size))
     im.save(img_path)
-    
