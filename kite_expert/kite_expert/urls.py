@@ -32,8 +32,8 @@ schema_view = get_schema_view(
         terms_of_service="",
         contact=openapi.Contact(email=""),
         license=openapi.License(name=""),
-        url=f"https://{settings.DOMAIN}",
     ),
+    url=settings.URL,
     public=True,
     permission_classes=(permissions.AllowAny,),
 )

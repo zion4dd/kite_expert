@@ -28,7 +28,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "true"
 
-DOMAIN = os.getenv("DOMAIN")
+DOMAIN = os.getenv("DOMAIN")  ###
+URL = os.getenv("URL")  ###
 
 USER_IS_ACTIVE = (
     os.getenv("USER_IS_ACTIVE") == "true"
