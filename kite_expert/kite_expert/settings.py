@@ -28,17 +28,19 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "true"
 
+DOMAIN = os.getenv("DOMAIN")
+
 USER_IS_ACTIVE = (
     os.getenv("USER_IS_ACTIVE") == "true"
 )  ### user register set field 'is_active'
 
 MAX_IMAGE_SIZE = int(os.getenv("MAX_IMAGE_SIZE", 1200))  ###
 
-ALLOWED_HOSTS = ["localhost", "kite-expert.ru", "www.kite-expert.ru"]
+ALLOWED_HOSTS = ["localhost", DOMAIN, f"www.{DOMAIN}"]
 
 INTERNAL_IPS = ["127.0.0.1"]
 
-CSRF_TRUSTED_ORIGINS = ["https://*.kite-expert.ru", "https://*.127.0.0.1"]  ###
+CSRF_TRUSTED_ORIGINS = [f"https://*.{DOMAIN}", "https://*.127.0.0.1"]  ###
 
 # Application definition
 
@@ -190,7 +192,7 @@ EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
 
 EMAIL_HOST = "smtp.beget.com"
 EMAIL_PORT = 465
-EMAIL_HOST_USER = "password-reset@kite-expert.ru"
+EMAIL_HOST_USER = f"password-reset@{DOMAIN}"
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_SSL = True
 # EMAIL_USE_TSL = True

@@ -26,12 +26,13 @@ from kite_expert import settings
 # drf_yasg
 schema_view = get_schema_view(
     openapi.Info(
-        title="kite-expert.ru API",
+        title=f"{settings.DOMAIN} API",
         default_version="v1",
         description="",
         terms_of_service="",
         contact=openapi.Contact(email=""),
         license=openapi.License(name=""),
+        url=f"https://{settings.DOMAIN}",
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
