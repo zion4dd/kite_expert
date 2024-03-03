@@ -1,5 +1,11 @@
 Проект реализован на фреймворке Django.
 API реализован с помощью DRF.
-Для кэширования используется Redis.
-Фоновые задачи выполняются через Celery.
-В качестве брокера используется Redis.
+Аутентификации по токенам - Djoser
+Кэширование - Redis.
+Фоновые задачи - Celery (broker=Redis)
+
+Deploy:
+https://kite-expert.ru/
+
+API:
+https://kite-expert.ru/apidoc/swagger/

@@ -1,8 +1,6 @@
 import logging
 
 from rest_framework import generics, viewsets
-# from rest_framework.response import Response
-# from rest_framework.views import APIView
 
 from kites import models
 
@@ -36,6 +34,9 @@ class BrandList(viewsets.ReadOnlyModelViewSet):
     serializer_class = BrandSerializer
     queryset = models.Brand.objects.all()
 
+
+# from rest_framework.response import Response
+# from rest_framework.views import APIView
 
 # class KiteAPI(APIView):
 #     def get(self, request):
