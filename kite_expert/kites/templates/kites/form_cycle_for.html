@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>{{ title }}</h1>
+<h3>{{ comment }}</h3>
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -17,5 +18,7 @@
     <!-- {% if form.instance.photo %}<img src="{{form.instance.photo.url}}" width="70">{% endif %} -->
     <p><button type="submit">Submit</button></p>
 </form>
+
+{{ bottom | safe}}
 
 {% endblock %}

@@ -7,7 +7,7 @@ from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.core.cache import cache
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
 
 from kite_expert.settings import PROFILE_IMAGE, USER_IS_ACTIVE
 from kites import forms, models, utils
@@ -123,11 +123,24 @@ class Expert(utils.DataMixin, ListView):
         return models.Expert.objects.all().select_related("user")
 
 
-class UserRegister(utils.DataMixin, CreateView):
+class UserRegTest(utils.DataMixin, FormView):
+    form_class = forms.UserRegTestForm
+    template_name = "kites/form_cycle_for.html"
+    title_page = "Register Test"
+    extra_context = {"comment": "Заполни форму кириллицей"}
+
+    def form_valid(self, form):
+        return redirect("kites:register", tk=utils.get_token())
+
+
+class UserRegister(UserPassesTestMixin, utils.DataMixin, CreateView):
     form_class = forms.UserRegisterForm
     template_name = "kites/form_cycle_for.html"
     success_url = reverse_lazy("kites:login")
     title_page = "Register"
+
+    def test_func(self):
+        return self.kwargs["tk"] == utils.get_token()
 
     def form_valid(self, form):
         "метод вызывается при успешной отправке формы"
@@ -143,8 +156,14 @@ class UserRegister(utils.DataMixin, CreateView):
 
 class UserLogin(utils.DataMixin, LoginView):
     form_class = forms.UserLoginForm
-    template_name = "kites/login.html"
+    template_name = "kites/form_cycle_for.html"
     title_page = "Login"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        href = reverse_lazy("kites:password_reset")
+        context.update(bottom=f'<br><a href="{href}">I forgot my password</a>')
+        return context
 
     def get_success_url(self):
         cache.clear()

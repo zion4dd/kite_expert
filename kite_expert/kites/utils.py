@@ -1,7 +1,15 @@
+import hashlib
+from datetime import datetime
+
 from django.core.cache import cache
 from django.db.models import Count
 
 from kites import models
+
+
+def get_token():
+    t = datetime.strftime(datetime.now(), "%d%m%Y%H%M")
+    return hashlib.sha256(t.encode()).hexdigest()
 
 
 class DataMixin:

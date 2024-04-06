@@ -9,9 +9,59 @@ from django.utils.text import slugify
 
 from kites import models
 
+reg_test = {
+    "q1": {"question": "Чикен ___", "answer": ["луп"]},
+    "q2": {"question": "Рубен ___", "answer": ["лентен", "лэнтен", "лэнтэн", "лентэн"]},
+    "q3": {"question": "Антибэкролл", "answer": ["фронтрол", "фронтролл"]},
+    "q4": {"question": "Клей кайтера", "answer": ["кристал", "кристалл"]},
+}
+
 
 class ThumbnailImageInput(forms.widgets.ClearableFileInput):
     template_name = "overrides/clearable_file_input.html"
+
+
+class UserRegTestForm(forms.Form):
+    q1 = forms.CharField(
+        max_length=20,
+        label=reg_test["q1"]["question"],
+        widget=forms.TextInput(attrs={"class": "form-input"}),
+    )
+    q2 = forms.CharField(
+        max_length=20,
+        label=reg_test["q2"]["question"],
+        widget=forms.TextInput(attrs={"class": "form-input"}),
+    )
+    q3 = forms.CharField(
+        max_length=20,
+        label=reg_test["q3"]["question"],
+        widget=forms.TextInput(attrs={"class": "form-input"}),
+    )
+    q4 = forms.CharField(
+        max_length=20,
+        label=reg_test["q4"]["question"],
+        widget=forms.TextInput(attrs={"class": "form-input"}),
+    )
+
+    def clean_q1(self):
+        q = self.cleaned_data["q1"]
+        if q.lower() not in reg_test["q1"]["answer"]:
+            raise forms.ValidationError("ошибка")
+
+    def clean_q2(self):
+        q = self.cleaned_data["q2"]
+        if q.lower() not in reg_test["q2"]["answer"]:
+            raise forms.ValidationError("ошибка")
+
+    def clean_q3(self):
+        q = self.cleaned_data["q3"]
+        if q.lower() not in reg_test["q3"]["answer"]:
+            raise forms.ValidationError("ошибка")
+
+    def clean_q4(self):
+        q = self.cleaned_data["q4"]
+        if q.lower() not in reg_test["q4"]["answer"]:
+            raise forms.ValidationError("ошибка")
 
 
 class UserRegisterForm(UserCreationForm):
