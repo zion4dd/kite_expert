@@ -1,14 +1,16 @@
 import hashlib
 from datetime import datetime
 
+from cachetools import TTLCache, cached
 from django.core.cache import cache
 from django.db.models import Count
 
 from kites import models
 
 
+@cached(cache=TTLCache(maxsize=512, ttl=600))
 def get_token():
-    t = datetime.strftime(datetime.now(), "%d%m%Y%H%M")
+    t = datetime.strftime(datetime.now(), "%d%m%Y%H%M%S")
     return hashlib.sha256(t.encode()).hexdigest()
 
 

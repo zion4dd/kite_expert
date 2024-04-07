@@ -85,6 +85,7 @@ class KiteEdit(LoginRequiredMixin, UserPassesTestMixin, utils.DataMixin, UpdateV
     form_class = forms.KiteForm
     template_name = "kites/form_cycle_for.html"
     title_page = "Edit kite"
+    raise_exception = True
 
     def test_func(self):
         return self.request.user.id == self.get_object().user_id
@@ -138,6 +139,7 @@ class UserRegister(UserPassesTestMixin, utils.DataMixin, CreateView):
     template_name = "kites/form_cycle_for.html"
     success_url = reverse_lazy("kites:login")
     title_page = "Register"
+    raise_exception = True
 
     def test_func(self):
         return self.kwargs["tk"] == utils.get_token()
