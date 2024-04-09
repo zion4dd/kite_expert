@@ -1,21 +1,23 @@
 import hashlib
 from datetime import datetime
 
-from cachetools import TTLCache, cached
 from django.core.cache import cache
 from django.db.models import Count
 
 from kites import models
 
 
-@cached(cache=TTLCache(maxsize=512, ttl=600))
 def get_token():
     t = datetime.strftime(datetime.now(), "%d%m%Y%H%M%S")
-    return hashlib.sha256(t.encode()).hexdigest()
+    return cache.get_or_set(
+        key="token",
+        default=hashlib.sha256(t.encode()).hexdigest(),
+        timeout=600,
+    )
 
 
 class DataMixin:
-    paginate_by = 10
+    paginate_by = 8
     title_page = None
     extra_context = {}
 

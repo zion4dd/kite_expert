@@ -1,5 +1,3 @@
-from typing import Dict, List
-
 from django.contrib.auth import logout  # login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -36,7 +34,7 @@ class Brand(utils.DataMixin, ListView):
         context.update(title=context["object_list"][0]["brand__name"])
         return context
 
-    def get_queryset(self) -> Dict:
+    def get_queryset(self):  # -> ValuesQuerySet[Kite, dict[str, Any]]
         slug = self.kwargs["slug"]
         return (
             models.Kite.objects.values("name", "brand__name", "slug")
@@ -57,7 +55,7 @@ class Kite(utils.DataMixin, ListView):
         )
         return context
 
-    def get_queryset(self) -> List[models.Kite]:
+    def get_queryset(self):  # -> QuerySet[Kite]
         return (
             models.Kite.objects.filter(slug=self.kwargs["slug"], is_published=True)
             .order_by("time_create")
@@ -143,6 +141,9 @@ class UserRegister(UserPassesTestMixin, utils.DataMixin, CreateView):
 
     def test_func(self):
         return self.kwargs["tk"] == utils.get_token()
+
+    def handle_no_permission(self):
+        return redirect("kites:regtest")
 
     def form_valid(self, form):
         "метод вызывается при успешной отправке формы"
