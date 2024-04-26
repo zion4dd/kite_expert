@@ -67,6 +67,7 @@ ul {
     top: 0;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
     background: var(--color1);
     padding: 0px 20px;
     font-size: 24px;
@@ -85,15 +86,15 @@ ul {
 }
 
 .head__left {
-    width: 50%;
-    margin: auto;
     text-align: left;
+    /* width: 50%; */
+    /* margin: auto; */
 }
 
 .head__right {
-    width: 50%;
-    margin: auto;
     text-align: right;
+    /* width: 50%; */
+    /* margin: auto; */
 }
 
 .sidenav {
