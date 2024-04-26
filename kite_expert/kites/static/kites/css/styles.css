@@ -85,13 +85,13 @@ ul {
 }
 
 .head__left {
-    width: 70%;
+    width: 50%;
     margin: auto;
     text-align: left;
 }
 
 .head__right {
-    width: 30%;
+    width: 50%;
     margin: auto;
     text-align: right;
 }
