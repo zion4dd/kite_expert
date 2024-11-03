@@ -6,6 +6,9 @@ dbstore/
 imgs/
 photos/
 *.bat
+redis/
+static/
+media/
 #
 
 .idea/

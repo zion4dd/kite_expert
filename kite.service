@@ -1,0 +1,18 @@
+# для запуска сервиса systemd
+[Unit]
+Description=Gunicorn instance to serve kite (zi)
+Requires=kite.socket
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/kite/kite_expert
+#ExecStart=/var/www/kite/venv/bin/gunicorn -b localhost:9000 --workers 2 kite_expert.wsgi:application
+ExecStart=/var/www/kite/venv/bin/gunicorn -b unix:/var/run/kite.sock --workers 2 kite_expert.wsgi
+EnvironmentFile=/root/.kite/.env
+Restart=on-failure
+RestartSec=1s
+
+[Install]
+WantedBy=multi-user.target

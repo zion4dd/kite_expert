@@ -1,0 +1,10 @@
+# для запуска сервиса systemd
+[Unit]
+Description=kite socket (zi)
+
+[Socket]
+ListenStream=/var/run/kite.sock
+SocketUser=www-data
+
+[Install]
+WantedBy=sockets.target

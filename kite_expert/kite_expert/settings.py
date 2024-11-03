@@ -164,7 +164,7 @@ CACHES = {
         # 'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         # 'LOCATION': os.path.join(BASE_DIR, 'cache'),
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/5",
+        "LOCATION": "redis://redis:6379/5",
         # "OPTIONS": {
         #     "DB": 0,
         #     "PASSWORD": 'pass',
@@ -176,8 +176,8 @@ CACHES = {
 
 # Celery Configuration Options
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_BROKER_URL = "redis://localhost:6379/6"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/6"
+CELERY_BROKER_URL = "redis://redis:6379/6"
+CELERY_RESULT_BACKEND = "redis://redis:6379/6"
 CELERY_BROKER_TRANSPORT_OPTIONS = {"visibility_timeout": 3600}
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
@@ -231,52 +231,52 @@ DJOSER = {
 }
 
 # debug; info; warning; error; critical
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-            "style": "{",
-        },
-        "simple": {
-            "format": "{levelname} {module} {message}",
-            "style": "{",
-        },
-    },
-    "handlers": {
-        "console": {
-            # "level": "WARNING",
-            "class": "logging.StreamHandler",
-        },
-        "file_debug": {
-            # "level": "WARNING",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(BASE_DIR, "log/debug.log"),
-            "formatter": "simple",
-            "maxBytes": 1024 * 1024,  # 1MB
-            "backupCount": 10,
-        },
-        "file_test": {
-            # "level": "WARNING",
-            "class": "logging.FileHandler",
-            "filename": os.path.join(BASE_DIR, "log/test.log"),
-            "formatter": "simple",
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["file_debug"],
-            "level": os.getenv("DJANGO_LOG_LEVEL", "WARNING"),
-            "propagate": False,
-        },
-        "test": {
-            "handlers": ["file_test"],
-            "level": "INFO",
-            "propagate": False,
-        },
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "formatters": {
+#         "verbose": {
+#             "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+#             "style": "{",
+#         },
+#         "simple": {
+#             "format": "{levelname} {module} {message}",
+#             "style": "{",
+#         },
+#     },
+#     "handlers": {
+#         "console": {
+#             # "level": "WARNING",
+#             "class": "logging.StreamHandler",
+#         },
+#         "file_debug": {
+#             # "level": "WARNING",
+#             "class": "logging.handlers.RotatingFileHandler",
+#             "filename": os.path.join(BASE_DIR, "log/debug.log"),
+#             "formatter": "simple",
+#             "maxBytes": 1024 * 1024,  # 1MB
+#             "backupCount": 10,
+#         },
+#         "file_test": {
+#             # "level": "WARNING",
+#             "class": "logging.FileHandler",
+#             "filename": os.path.join(BASE_DIR, "log/test.log"),
+#             "formatter": "simple",
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": ["file_debug"],
+#             "level": os.getenv("DJANGO_LOG_LEVEL", "WARNING"),
+#             "propagate": False,
+#         },
+#         "test": {
+#             "handlers": ["file_test"],
+#             "level": "INFO",
+#             "propagate": False,
+#         },
+#     },
+# }
 
 
 """ The “sites” framework to change {domain} {sitename}

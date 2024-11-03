@@ -1,0 +1,29 @@
+---
+services:
+  backend:
+    container_name: backkite
+    # ports:
+    #   - "7000:8000"
+    env_file:
+      - .env
+    image: kite-expert
+    build:
+      dockerfile: backend.dockerfile
+      context: .
+    command: /start.sh #deploy
+    # command: python manage.py runserver 0.0.0.0:8000 #dev
+    volumes:
+      - ./kite_expert:/app
+      - ./start.sh:/start.sh
+      - /var/run/kite:/var/run/kite
+    depends_on:
+      - redis
+
+  redis:
+    image: "redis:alpine"
+    command: "redis-server --appendonly yes --port 6379"
+    # ports:
+    #   - "6379:6480"
+    volumes:
+      - ./redis:/data
+    restart: "unless-stopped"
