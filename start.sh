@@ -10,4 +10,6 @@ gunicorn --workers 2 kite_expert.wsgi --bind unix:/var/run/kite/kite.sock &
 
 celery -A kite_expert worker --loglevel=info &
 
-celery -A kite_expert flower &
+celery -A kite_expert flower --port=5555 &
+
+wait
