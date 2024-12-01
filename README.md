@@ -16,3 +16,16 @@ https://kite-expert.ru/
 
 API:  
 https://kite-expert.ru/docs/swagger/
+
+
+```
+# .env
+DEBUG="false"
+USER_IS_ACTIVE="true"
+DJANGO_LOG_LEVEL="WARNING"
+SECRET_KEY="django-insecure-j@j+l*************************************"
+MAX_IMAGE_SIZE="1200"
+EMAIL_HOST_PASSWORD="password"
+DOMAIN="localhost:5000"
+URL="http://localhost:5000"
+```
