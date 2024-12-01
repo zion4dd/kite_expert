@@ -1,4 +1,7 @@
 # для запуска сервиса systemd
+# ln -s /var/www/kite/kite.socket /etc/systemd/system/kite.socket
+# systemctl daemon-reload
+
 [Unit]
 Description=kite socket (zi)
 

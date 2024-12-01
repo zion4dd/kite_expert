@@ -1,4 +1,7 @@
 # для запуска сервиса systemd
+# ln -s /var/www/kite/kite.service /etc/systemd/system/kite.service
+# systemctl daemon-reload
+
 [Unit]
 Description=Gunicorn instance to serve kite (zi)
 Requires=kite.socket
